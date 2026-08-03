@@ -33,6 +33,7 @@ from src.liuyao import compute_liuyao
 from src.xingpan import compute_xingpan
 from src.report import to_markdown as bazi_to_md
 from src.safety import DISCLAIMER
+from src.ai_interpret import interpret_bazi, interpret_meihua, interpret_liuyao, interpret_xingpan
 
 # ── Helpers ──
 def _normalize_gender(g: str) -> str:
@@ -195,6 +196,54 @@ def xingpan(request: XingpanRequest):
             status_code=400,
             content={"code": 1, "error": str(e)},
         )
+
+
+# ── AI 解读 ──
+@app.post("/api/v1/bazi/ai", tags=["AI解读"])
+async def bazi_ai(request: BaziRequest):
+    """八字 AI 白话解读"""
+    gender = _normalize_gender(request.gender)
+    chart = compute_bazi(request.year, request.month, request.day, request.hour, request.minute, gender, request.birthplace)
+    try:
+        text = await interpret_bazi(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
+
+@app.post("/api/v1/meihua/ai", tags=["AI解读"])
+async def meihua_ai(request: MeihuaRequest):
+    """梅花易数 AI 白话解读"""
+    chart = compute_meihua(request.a, request.b, request.c, request.question)
+    try:
+        text = await interpret_meihua(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
+
+@app.post("/api/v1/liuyao/ai", tags=["AI解读"])
+async def liuyao_ai(request: LiuyaoRequest = None):
+    """六爻 AI 白话解读"""
+    numbers = request.numbers if request else None
+    question = request.question if request else ""
+    chart = compute_liuyao(numbers=numbers, question=question)
+    try:
+        text = await interpret_liuyao(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
+
+@app.post("/api/v1/xingpan/ai", tags=["AI解读"])
+async def xingpan_ai(request: XingpanRequest):
+    """星盘 AI 白话解读"""
+    chart = compute_xingpan(request.year, request.month, request.day, request.hour, request.minute, request.birthplace)
+    try:
+        text = await interpret_xingpan(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
 
 
 # ── 用户端应用 ──
@@ -424,7 +473,7 @@ APP_HTML = """<!DOCTYPE html>
     <div class="form-row">
       <div class="form-group"><label>性别</label><select id="bz_gender"><option>男</option><option>女</option></select></div>
       <div class="form-group"><label>出生地（可选）</label><input type="text" id="bz_place" placeholder="如：北京" style="width:180px;"></div>
-      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doBazi()">排盘</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doBazi()">排盘</button><button class="btn" onclick="doBaziAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
     </div>
     <div class="result" id="bz-result"></div>
   </div>
@@ -437,7 +486,7 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group"><label>数字 2</label><input type="number" id="mh_b" value="" placeholder="2"></div>
       <div class="form-group"><label>数字 3</label><input type="number" id="mh_c" value="" placeholder="0"></div>
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="mh_q" placeholder="如：问事业" style="width:200px;"></div>
-      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doMeihua()">起卦</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doMeihua()">起卦</button><button class="btn" onclick="doMeihuaAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
     </div>
     <div class="result" id="mh-result"></div>
   </div>
@@ -456,7 +505,7 @@ APP_HTML = """<!DOCTYPE html>
     </div>
     <div class="form-row">
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="ly_q" placeholder="如：问财运" style="width:200px;"></div>
-      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doLiuyao()">起卦</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doLiuyao()">起卦</button><button class="btn" onclick="doLiuyaoAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
     </div>
     <div class="result" id="ly-result"></div>
   </div>
@@ -471,7 +520,7 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group"><label>时 (0-23)</label><input type="number" id="xp_hour" value="" placeholder="5" min="0" max="23"></div>
       <div class="form-group"><label>分</label><input type="number" id="xp_min" value="" placeholder="30" min="0" max="59"></div>
       <div class="form-group"><label>出生地（可选）</label><input type="text" id="xp_place" placeholder="如：北京" style="width:180px;"></div>
-      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doXingpan()">排盘</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doXingpan()">排盘</button><button class="btn" onclick="doXingpanAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
     </div>
     <div class="result" id="xp-result"></div>
   </div>
@@ -628,6 +677,61 @@ async function doXingpan() {
       </div>
       <p class="small" style="margin-top:1rem;text-align:center;">${data.disclaimer}</p>
     </div>`;
+}
+
+async function doBaziAI() {
+  const body = {
+    year:+document.getElementById('bz_year').value, month:+document.getElementById('bz_month').value,
+    day:+document.getElementById('bz_day').value, hour:+document.getElementById('bz_hour').value,
+    minute:+document.getElementById('bz_min').value||0,
+    gender:document.getElementById('bz_gender').value, birthplace:document.getElementById('bz_place').value
+  };
+  const data = await callAPI('/api/v1/bazi/ai', body);
+  if (!data) return;
+  showReading('bz-result', data.ai_reading, doBazi);
+}
+
+async function doMeihuaAI() {
+  const body = { a:+document.getElementById('mh_a').value, b:+document.getElementById('mh_b').value, c:+document.getElementById('mh_c').value, question:document.getElementById('mh_q').value };
+  const data = await callAPI('/api/v1/meihua/ai', body);
+  if (!data) return;
+  showReading('mh-result', data.ai_reading, doMeihua);
+}
+
+async function doLiuyaoAI() {
+  const ns = ['ly_n1','ly_n2','ly_n3','ly_n4','ly_n5','ly_n6'].map(id => +document.getElementById(id).value);
+  const body = { numbers:ns, question:document.getElementById('ly_q').value };
+  const data = await callAPI('/api/v1/liuyao/ai', body);
+  if (!data) return;
+  showReading('ly-result', data.ai_reading, doLiuyao);
+}
+
+async function doXingpanAI() {
+  const body = {
+    year:+document.getElementById('xp_year').value, month:+document.getElementById('xp_month').value,
+    day:+document.getElementById('xp_day').value, hour:+document.getElementById('xp_hour').value,
+    minute:+document.getElementById('xp_min').value||0, birthplace:document.getElementById('xp_place').value
+  };
+  const data = await callAPI('/api/v1/xingpan/ai', body);
+  if (!data) return;
+  showReading('xp-result', data.ai_reading, doXingpan);
+}
+
+function showReading(containerId, aiText, fallbackFn) {
+  const container = document.getElementById(containerId);
+  // 先显示基础排盘
+  fallbackFn();
+  // 追加 AI 解读
+  setTimeout(() => {
+    const existing = container.querySelector('.ai-reading');
+    if (existing) existing.remove();
+    const div = document.createElement('div');
+    div.className = 'ai-reading result-block show';
+    div.style.cssText = 'margin-top:1rem;padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent2);';
+    div.innerHTML = `<h3>🤖 AI 白话解读</h3><p style="line-height:1.8;white-space:pre-wrap;">${aiText}</p><p class="small" style="margin-top:0.5rem;color:var(--sub);">以上解读由 AI 生成，仅供参考</p>`;
+    container.appendChild(div);
+    div.scrollIntoView({behavior:'smooth'});
+  }, 300);
 }
 </script>
 </body>
