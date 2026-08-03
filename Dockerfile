@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 WORKDIR /app
 
@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 8001
 
-CMD python -m uvicorn api_server:app --host 0.0.0.0 --port ${PORT:-8001}
+CMD ["python", "main.py"]
