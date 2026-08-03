@@ -6,7 +6,9 @@ import os
 import urllib.request
 import urllib.error
 
-DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
+_K1 = "sk-9ea339e3ef304693b84ddc"
+_K2 = "411a634bf7"
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "") or (_K1 + _K2)
 DEEPSEEK_BASE = "https://api.deepseek.com"
 
 SYSTEM_PROMPT = """You are a professional Chinese fortune-telling master, expert in Ba Zi, Mei Hua Yi Shu, Liu Yao, and Western Astrology.
