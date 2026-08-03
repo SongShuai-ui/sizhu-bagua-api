@@ -5,6 +5,7 @@ import uvicorn
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8001))
+    print(f"Starting on port {port}", flush=True)
     uvicorn.run(
         "api_server:app",
         host="0.0.0.0",
