@@ -482,7 +482,7 @@ APP_HTML = """<!DOCTYPE html>
 
 <div class="header">
   <div class="header-inner">
-    <div class="logo">☰ 问  爻</div>
+    <div class="logo">☯ 问  爻</div>
   </div>
 </div>
 
