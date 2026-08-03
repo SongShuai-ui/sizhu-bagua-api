@@ -197,6 +197,12 @@ def xingpan(request: XingpanRequest):
         )
 
 
+# ── 用户端应用 ──
+@app.get("/app", response_class=HTMLResponse, include_in_schema=False)
+def app_page():
+    return HTMLResponse(content=APP_HTML)
+
+
 # ── 根路径 → 中文文档页 ──
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 def index():
@@ -332,6 +338,289 @@ DOC_HTML = """<!DOCTYPE html>
   不构成任何形式的寿命判断、疾病诊断、投资建议或法律建议。
 </div>
 
+</body>
+</html>"""
+
+
+APP_HTML = """<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四柱八卦 — 命理排盘</title>
+<style>
+  :root { --bg:#f8f6f2; --card:#fff; --text:#2c2416; --sub:#8b7355; --border:#e5d5c0; --accent:#c9a96e; --accent2:#8b6914; --danger:#c0392b; --input-bg:#fff; --shadow:0 2px 12px rgba(0,0,0,0.06); }
+  @media(prefers-color-scheme:dark){ :root { --bg:#1a1814; --card:#24211a; --text:#e8dcc8; --sub:#9b8b70; --border:#3a3224; --accent:#d4b87a; --accent2:#e0c88a; --input-bg:#2a261e; --shadow:0 2px 12px rgba(0,0,0,0.3); } }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+  .header { background:var(--card); border-bottom:1px solid var(--border); padding:1rem 1.5rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:10; }
+  .header-inner { max-width:800px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+  .logo { font-size:1.3rem; font-weight:700; color:var(--accent2); }
+  .logo span { font-size:0.8rem; color:var(--sub); margin-left:0.5rem; font-weight:400; }
+  .container { max-width:800px; margin:0 auto; padding:1.5rem; }
+  .tabs { display:flex; gap:0.25rem; margin-bottom:1.5rem; background:var(--card); border-radius:12px; padding:0.3rem; box-shadow:var(--shadow); }
+  .tab { flex:1; padding:0.7rem 0.5rem; border:none; background:none; cursor:pointer; border-radius:10px; font-size:0.95rem; color:var(--sub); transition:all 0.2s; font-family:inherit; }
+  .tab.active { background:var(--accent); color:#fff; font-weight:600; }
+  .tab:hover:not(.active) { color:var(--text); }
+  .card { background:var(--card); border-radius:12px; padding:1.5rem; margin-bottom:1rem; box-shadow:var(--shadow); }
+  .card h2 { font-size:1.1rem; margin-bottom:1rem; color:var(--accent2); }
+  .form-row { display:flex; gap:0.8rem; margin-bottom:0.8rem; flex-wrap:wrap; }
+  .form-group { display:flex; flex-direction:column; gap:0.25rem; }
+  .form-group label { font-size:0.8rem; color:var(--sub); }
+  .form-group input, .form-group select { padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:0.95rem; background:var(--input-bg); color:var(--text); font-family:inherit; outline:none; transition:border 0.2s; }
+  .form-group input:focus, .form-group select:focus { border-color:var(--accent); }
+  .btn { padding:0.65rem 1.8rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-size:0.95rem; cursor:pointer; font-weight:600; font-family:inherit; transition:all 0.2s; }
+  .btn:hover { background:var(--accent2); }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .result { display:none; }
+  .result.show { display:block; }
+  .result-block { margin-bottom:1.2rem; }
+  .result-block h3 { font-size:0.95rem; color:var(--accent2); margin-bottom:0.4rem; padding-bottom:0.3rem; border-bottom:1px solid var(--border); }
+  .bazi-big { font-size:1.8rem; font-weight:700; text-align:center; letter-spacing:0.15em; margin:0.6rem 0; color:var(--accent2); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; }
+  .tag { display:inline-block; padding:0.2rem 0.6rem; background:var(--bg); border-radius:4px; font-size:0.85rem; margin:0.15rem; }
+  .loading { text-align:center; padding:2rem; color:var(--sub); display:none; }
+  .loading.show { display:block; }
+  .spinner { width:30px; height:30px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 0.8rem; }
+  @keyframes spin { to{transform:rotate(360deg);} }
+  .notice { background:#fff3cd; border-left:3px solid #ffc107; padding:0.6rem 1rem; border-radius:0 6px 6px 0; font-size:0.85rem; margin-bottom:1rem; color:#664d03; }
+  @media(prefers-color-scheme:dark){ .notice { background:#2a2010; color:#e0c060; } }
+  .error { background:#ffe0e0; border-left:3px solid var(--danger); padding:0.6rem 1rem; border-radius:0 6px 6px 0; color:var(--danger); font-size:0.85rem; margin-bottom:1rem; display:none; }
+  @media(prefers-color-scheme:dark){ .error { background:#2a1010; } }
+  .small { font-size:0.8rem; color:var(--sub); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">🀄️ 四柱八卦<span>命理排盘</span></div>
+    <a href="/docs" class="small" style="text-decoration:none;">API 文档 →</a>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="bazi">🎋 八字排盘</button>
+    <button class="tab" data-tab="meihua">🌸 梅花易数</button>
+    <button class="tab" data-tab="liuyao">🪙 六爻预测</button>
+    <button class="tab" data-tab="xingpan">⭐ 占星星盘</button>
+  </div>
+
+  <div class="notice">⚠️ 本工具仅供传统文化研究与参考，不构成任何决策建议。</div>
+  <div class="error" id="error"></div>
+  <div class="loading" id="loading"><div class="spinner"></div>正在计算中...</div>
+
+  <!-- 八字 -->
+  <div class="card tab-content" id="tab-bazi">
+    <h2>请输入出生信息</h2>
+    <div class="form-row">
+      <div class="form-group"><label>年</label><input type="number" id="bz_year" value="1989" min="1900" max="2100"></div>
+      <div class="form-group"><label>月</label><input type="number" id="bz_month" value="6" min="1" max="12"></div>
+      <div class="form-group"><label>日</label><input type="number" id="bz_day" value="28" min="1" max="31"></div>
+      <div class="form-group"><label>时 (0-23)</label><input type="number" id="bz_hour" value="5" min="0" max="23"></div>
+      <div class="form-group"><label>分</label><input type="number" id="bz_min" value="30" min="0" max="59"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>性别</label><select id="bz_gender"><option>男</option><option>女</option></select></div>
+      <div class="form-group"><label>出生地（可选）</label><input type="text" id="bz_place" placeholder="如：北京" style="width:180px;"></div>
+      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doBazi()">排盘</button></div>
+    </div>
+    <div class="result" id="bz-result"></div>
+  </div>
+
+  <!-- 梅花 -->
+  <div class="card tab-content" id="tab-meihua" style="display:none;">
+    <h2>梅花易数 — 三数起卦</h2>
+    <div class="form-row">
+      <div class="form-group"><label>数字 1</label><input type="number" id="mh_a" value="5"></div>
+      <div class="form-group"><label>数字 2</label><input type="number" id="mh_b" value="2"></div>
+      <div class="form-group"><label>数字 3</label><input type="number" id="mh_c" value="0"></div>
+      <div class="form-group"><label>所问之事（可选）</label><input type="text" id="mh_q" placeholder="如：问事业" style="width:200px;"></div>
+      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doMeihua()">起卦</button></div>
+    </div>
+    <div class="result" id="mh-result"></div>
+  </div>
+
+  <!-- 六爻 -->
+  <div class="card tab-content" id="tab-liuyao" style="display:none;">
+    <h2>六爻预测</h2>
+    <p class="small" style="margin-bottom:0.8rem;">输入6个数字起卦，或留空随机铜钱起卦</p>
+    <div class="form-row">
+      <div class="form-group"><label>数字1</label><input type="number" id="ly_n1" value="3" min="0" max="9"></div>
+      <div class="form-group"><label>数字2</label><input type="number" id="ly_n2" value="6" min="0" max="9"></div>
+      <div class="form-group"><label>数字3</label><input type="number" id="ly_n3" value="8" min="0" max="9"></div>
+      <div class="form-group"><label>数字4</label><input type="number" id="ly_n4" value="4" min="0" max="9"></div>
+      <div class="form-group"><label>数字5</label><input type="number" id="ly_n5" value="2" min="0" max="9"></div>
+      <div class="form-group"><label>数字6</label><input type="number" id="ly_n6" value="9" min="0" max="9"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>所问之事（可选）</label><input type="text" id="ly_q" placeholder="如：问财运" style="width:200px;"></div>
+      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doLiuyao()">起卦</button></div>
+    </div>
+    <div class="result" id="ly-result"></div>
+  </div>
+
+  <!-- 星盘 -->
+  <div class="card tab-content" id="tab-xingpan" style="display:none;">
+    <h2>请输入出生信息</h2>
+    <div class="form-row">
+      <div class="form-group"><label>年</label><input type="number" id="xp_year" value="1989" min="1900" max="2100"></div>
+      <div class="form-group"><label>月</label><input type="number" id="xp_month" value="6" min="1" max="12"></div>
+      <div class="form-group"><label>日</label><input type="number" id="xp_day" value="28" min="1" max="31"></div>
+      <div class="form-group"><label>时 (0-23)</label><input type="number" id="xp_hour" value="5" min="0" max="23"></div>
+      <div class="form-group"><label>分</label><input type="number" id="xp_min" value="30" min="0" max="59"></div>
+      <div class="form-group"><label>出生地（可选）</label><input type="text" id="xp_place" placeholder="如：北京" style="width:180px;"></div>
+      <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doXingpan()">排盘</button></div>
+    </div>
+    <div class="result" id="xp-result"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+const tabs = document.querySelectorAll('.tab');
+tabs.forEach(t => t.addEventListener('click', () => {
+  tabs.forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+  document.getElementById('tab-' + t.dataset.tab).style.display = '';
+}));
+
+function showErr(msg) { const e = document.getElementById('error'); e.textContent = msg; e.style.display = msg ? 'block' : 'none'; }
+function loading(s) { document.getElementById('loading').classList.toggle('show', s); }
+
+async function callAPI(path, body) {
+  showErr(''); loading(true);
+  try {
+    const r = await fetch(API + path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+    const d = await r.json();
+    if (d.code !== 0) throw new Error(d.error || d.detail?.[0]?.msg || '请求失败');
+    return d.data;
+  } catch(e) { showErr(e.message); return null; }
+  finally { loading(false); }
+}
+
+async function doBazi() {
+  const data = await callAPI('/api/v1/bazi', {
+    year:+document.getElementById('bz_year').value, month:+document.getElementById('bz_month').value,
+    day:+document.getElementById('bz_day').value, hour:+document.getElementById('bz_hour').value,
+    minute:+document.getElementById('bz_min').value||0,
+    gender:document.getElementById('bz_gender').value, birthplace:document.getElementById('bz_place').value
+  });
+  if (!data) return;
+  const p = data.pillars, dm = data.day_master, sa = data.strength_analysis, lk = data.luck;
+  document.getElementById('bz-result').innerHTML = `
+    <div class="result show">
+      <div class="bazi-big">${p.year.gan}${p.year.zhi} ${p.month.gan}${p.month.zhi} ${p.day.gan}${p.day.zhi} ${p.hour.gan}${p.hour.zhi}</div>
+      <div class="result-block">
+        <h3>基本信息</h3>
+        <div class="grid">
+          <div><span class="small">日主</span><br><strong>${dm.gan}${dm.element}</strong></div>
+          <div><span class="small">生肖</span><br><strong>${dm.shengxiao}</strong></div>
+          <div><span class="small">身强身弱</span><br><strong>${sa.verdict}</strong></div>
+          <div><span class="small">喜用神</span><br><strong>${sa.useful_elements.join(' ')}</strong></div>
+        </div>
+      </div>
+      <div class="result-block">
+        <h3>十神</h3>
+        <span class="tag">年干：${data.ten_gods.year_gan}</span>
+        <span class="tag">月干：${data.ten_gods.month_gan}</span>
+        <span class="tag">时干：${data.ten_gods.hour_gan}</span>
+      </div>
+      <div class="result-block">
+        <h3>纳音</h3>
+        <span class="tag">${data.nayin.year}</span> → <span class="tag">${data.nayin.month}</span> → <span class="tag">${data.nayin.day}</span> → <span class="tag">${data.nayin.hour}</span>
+      </div>
+      <div class="result-block">
+        <h3>五行分布</h3>
+        <span class="tag">木 ${data.five_elements['木']}</span>
+        <span class="tag">火 ${data.five_elements['火']}</span>
+        <span class="tag">土 ${data.five_elements['土']}</span>
+        <span class="tag">金 ${data.five_elements['金']}</span>
+        <span class="tag">水 ${data.five_elements['水']}</span>
+      </div>
+      ${lk.current ? `<div class="result-block"><h3>当前运势</h3><div class="grid"><div><span class="small">大运</span><br><strong>${lk.current.ganzhi} (${lk.current.start_age}-${lk.current.end_age}岁)</strong></div><div><span class="small">${data.annual_fortune.year} 流年</span><br><strong>${data.annual_fortune.ganzhi} · ${data.annual_fortune.ten_god}</strong></div></div></div>` : ''}
+      <div class="result-block"><h3>地支藏干</h3><span class="small">年：${data.hidden_stems.year.join(' ')} | 月：${data.hidden_stems.month.join(' ')} | 日：${data.hidden_stems.day.join(' ')} | 时：${data.hidden_stems.hour.join(' ')}</span></div>
+      <p class="small" style="margin-top:1rem;text-align:center;">${data.disclaimer}</p>
+    </div>`;
+}
+
+async function doMeihua() {
+  const data = await callAPI('/api/v1/meihua', {
+    a:+document.getElementById('mh_a').value, b:+document.getElementById('mh_b').value,
+    c:+document.getElementById('mh_c').value, question:document.getElementById('mh_q').value
+  });
+  if (!data) return;
+  const ty = data.tiyong;
+  document.getElementById('mh-result').innerHTML = `
+    <div class="result show">
+      <div class="bazi-big">${data.bengua.name}</div>
+      <div class="result-block"><h3>卦象推演</h3>
+        <div class="grid">
+          <div><span class="small">本卦</span><br><strong>${data.bengua.name}</strong><br><span class="small">${data.bengua.meaning}</span></div>
+          <div><span class="small">互卦</span><br><strong>${data.hugua.name}</strong><br><span class="small">${data.hugua.meaning}</span></div>
+          <div><span class="small">变卦</span><br><strong>${data.biangua.name}</strong><br><span class="small">${data.biangua.meaning}</span></div>
+        </div>
+      </div>
+      <div class="result-block"><h3>体用生克</h3>
+        <p><strong>体卦：</strong>${ty.ti_gua}（${data.shang_gua.wuxing}）| <strong>用卦：</strong>${ty.yong_gua}（${data.xia_gua.wuxing}）</p>
+        <p style="font-size:1.1rem;margin-top:0.4rem;"><strong>${ty.result}</strong> — ${ty.description}</p>
+      </div>
+      <p class="small" style="margin-top:1rem;text-align:center;">${data.disclaimer}</p>
+    </div>`;
+}
+
+async function doLiuyao() {
+  const ns = ['ly_n1','ly_n2','ly_n3','ly_n4','ly_n5','ly_n6'].map(id => +document.getElementById(id).value);
+  const data = await callAPI('/api/v1/liuyao', { numbers:ns, question:document.getElementById('ly_q').value });
+  if (!data) return;
+  const a = data.analysis || {};
+  document.getElementById('ly-result').innerHTML = `
+    <div class="result show">
+      <div class="bazi-big">${data.gua_name}</div>
+      <div class="result-block"><h3>排盘</h3>
+        ${data.yaos.map(y => `<div style="padding:0.3rem 0;">${y.display} <strong>${y.label}</strong> ${y.shi_ying !== '-' ? '← '+y.shi_ying : ''} ${y.is_moving ? '⚡动' : ''}</div>`).join('')}
+        <p class="small" style="margin-top:0.4rem;">${data.gong}宫 · ${data.gong_wuxing} | 动爻 ${data.moving_count} 个</p>
+      </div>
+      ${a.gua_meaning ? `<div class="result-block"><h3>解卦</h3><p><strong>卦义：</strong>${a.gua_meaning}</p><p style="margin-top:0.4rem;"><strong>变动：</strong>${a.moving_count_analysis}</p>${(a.yao_analysis||[]).map(y => `<p class="small">- ${y}</p>`).join('')}<p style="margin-top:0.6rem;color:var(--accent2);"><strong>建议：</strong>${a.overall_advice}</p></div>` : ''}
+      <p class="small" style="margin-top:1rem;text-align:center;">${data.disclaimer}</p>
+    </div>`;
+}
+
+async function doXingpan() {
+  const data = await callAPI('/api/v1/xingpan', {
+    year:+document.getElementById('xp_year').value, month:+document.getElementById('xp_month').value,
+    day:+document.getElementById('xp_day').value, hour:+document.getElementById('xp_hour').value,
+    minute:+document.getElementById('xp_min').value||0, birthplace:document.getElementById('xp_place').value
+  });
+  if (!data) return;
+  const pp = data.planets;
+  const planetOrder = ['太阳','月亮','水星','金星','火星','木星','土星','天王星','海王星','冥王星'];
+  document.getElementById('xp-result').innerHTML = `
+    <div class="result show">
+      <div class="bazi-big">☀️ ${pp['太阳'].zodiac}座 🌙 ${pp['月亮'].zodiac}座</div>
+      <div class="result-block"><h3>上升 & 天顶</h3>
+        <div class="grid">
+          <div><span class="small">上升 ASC</span><br><strong>${data.ascendant.zodiac}座</strong></div>
+          <div><span class="small">天顶 MC</span><br><strong>${data.midheaven.zodiac}座</strong></div>
+          <div><span class="small">主导元素</span><br><strong>${data.dominant_element}</strong></div>
+          <div><span class="small">日月关系</span><br><strong>${data.sun_moon_relation}</strong></div>
+        </div>
+      </div>
+      <div class="result-block"><h3>行星位置</h3>
+        ${planetOrder.map(n => `<span class="tag">${n}：${pp[n].zodiac} ${pp[n].degree}°</span>`).join('')}
+      </div>
+      <div class="result-block"><h3>元素分布（个人行星）</h3>
+        <span class="tag">🔥 火 ${data.element_distribution['火']}</span>
+        <span class="tag">🌍 土 ${data.element_distribution['土']}</span>
+        <span class="tag">💨 风 ${data.element_distribution['风']}</span>
+        <span class="tag">💧 水 ${data.element_distribution['水']}</span>
+      </div>
+      <p class="small" style="margin-top:1rem;text-align:center;">${data.disclaimer}</p>
+    </div>`;
+}
+</script>
 </body>
 </html>"""
 
