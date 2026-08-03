@@ -3,7 +3,8 @@
 
 import json
 import os
-import httpx
+import urllib.request
+import urllib.error
 
 DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "")
 DEEPSEEK_BASE = "https://api.deepseek.com"
@@ -22,7 +23,7 @@ SYSTEM_PROMPT = """你是一位资深命理师，精通八字、梅花易数、�
 注意：不预测寿命、不诊断疾病、不建议投资买卖、不做恐吓。" ""
 
 
-async def interpret_bazi(chart: dict) -> str:
+def interpret_bazi(chart: dict) -> str:
     """八字解读"""
     user_msg = json.dumps({
         "类型": "八字排盘",
@@ -43,10 +44,10 @@ async def interpret_bazi(chart: dict) -> str:
         "流年": f"{chart['annual_fortune']['year']}年 {chart['annual_fortune']['ganzhi']} {chart['annual_fortune']['ten_god']}",
         "年龄": chart.get('current_age', '未知'),
     }, ensure_ascii=False)
-    return await _call_deepseek(user_msg)
+    return _call_deepseek(user_msg)
 
 
-async def interpret_meihua(chart: dict) -> str:
+def interpret_meihua(chart: dict) -> str:
     """梅花易数解读"""
     ty = chart['tiyong']
     user_msg = json.dumps({
@@ -63,10 +64,10 @@ async def interpret_meihua(chart: dict) -> str:
         "体用结果": ty['result'],
         "体用解读": ty['description'],
     }, ensure_ascii=False)
-    return await _call_deepseek(user_msg)
+    return _call_deepseek(user_msg)
 
 
-async def interpret_liuyao(chart: dict) -> str:
+def interpret_liuyao(chart: dict) -> str:
     """六爻解读"""
     user_msg = json.dumps({
         "类型": "六爻预测",
@@ -79,10 +80,10 @@ async def interpret_liuyao(chart: dict) -> str:
         "用神": chart.get('yongshen', ''),
         "基础分析": chart.get('analysis', {}),
     }, ensure_ascii=False)
-    return await _call_deepseek(user_msg)
+    return _call_deepseek(user_msg)
 
 
-async def interpret_xingpan(chart: dict) -> str:
+def interpret_xingpan(chart: dict) -> str:
     """星盘解读"""
     planets = chart['planets']
     user_msg = json.dumps({
@@ -98,29 +99,35 @@ async def interpret_xingpan(chart: dict) -> str:
         "主导元素": chart['dominant_element'],
         "元素分布": chart['element_distribution'],
     }, ensure_ascii=False)
-    return await _call_deepseek(user_msg)
+    return _call_deepseek(user_msg)
 
 
-async def _call_deepseek(user_message: str) -> str:
-    """调用 DeepSeek API"""
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        resp = await client.post(
-            f"{DEEPSEEK_BASE}/chat/completions",
-            headers={
-                "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
-                "Content-Type": "application/json",
-            },
-            json={
-                "model": "deepseek-chat",
-                "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {"role": "user", "content": user_message},
-                ],
-                "temperature": 0.7,
-                "max_tokens": 800,
-            },
-        )
-        if resp.status_code != 200:
-            return f"[AI 解读暂时不可用: HTTP {resp.status_code}]"
-        data = resp.json()
-        return data["choices"][0]["message"]["content"]
+def _call_deepseek(user_message: str) -> str:
+    """调用 DeepSeek API（同步，使用 urllib）"""
+    if not DEEPSEEK_API_KEY:
+        return "[AI 解读未配置：请设置 DEEPSEEK_API_KEY 环境变量]"
+    body = json.dumps({
+        "model": "deepseek-chat",
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_message},
+        ],
+        "temperature": 0.7,
+        "max_tokens": 800,
+    }, ensure_ascii=False).encode("utf-8")
+    req = urllib.request.Request(
+        f"{DEEPSEEK_BASE}/chat/completions",
+        data=body,
+        headers={
+            "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
+            "Content-Type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return data["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        return f"[AI 解读失败: HTTP {e.code}]"
+    except Exception as e:
+        return f"[AI 解读异常: {str(e)[:100]}]"

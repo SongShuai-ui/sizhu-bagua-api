@@ -200,47 +200,47 @@ def xingpan(request: XingpanRequest):
 
 # ── AI 解读 ──
 @app.post("/api/v1/bazi/ai", tags=["AI解读"])
-async def bazi_ai(request: BaziRequest):
+def bazi_ai(request: BaziRequest):
     """八字 AI 白话解读"""
     gender = _normalize_gender(request.gender)
     chart = compute_bazi(request.year, request.month, request.day, request.hour, request.minute, gender, request.birthplace)
     try:
-        text = await interpret_bazi(chart)
+        text = interpret_bazi(chart)
         return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
     except Exception as e:
         return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
 
 
 @app.post("/api/v1/meihua/ai", tags=["AI解读"])
-async def meihua_ai(request: MeihuaRequest):
+def meihua_ai(request: MeihuaRequest):
     """梅花易数 AI 白话解读"""
     chart = compute_meihua(request.a, request.b, request.c, request.question)
     try:
-        text = await interpret_meihua(chart)
+        text = interpret_meihua(chart)
         return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
     except Exception as e:
         return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
 
 
 @app.post("/api/v1/liuyao/ai", tags=["AI解读"])
-async def liuyao_ai(request: LiuyaoRequest = None):
+def liuyao_ai(request: LiuyaoRequest = None):
     """六爻 AI 白话解读"""
     numbers = request.numbers if request else None
     question = request.question if request else ""
     chart = compute_liuyao(numbers=numbers, question=question)
     try:
-        text = await interpret_liuyao(chart)
+        text = interpret_liuyao(chart)
         return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
     except Exception as e:
         return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
 
 
 @app.post("/api/v1/xingpan/ai", tags=["AI解读"])
-async def xingpan_ai(request: XingpanRequest):
+def xingpan_ai(request: XingpanRequest):
     """星盘 AI 白话解读"""
     chart = compute_xingpan(request.year, request.month, request.day, request.hour, request.minute, request.birthplace)
     try:
-        text = await interpret_xingpan(chart)
+        text = interpret_xingpan(chart)
         return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
     except Exception as e:
         return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
