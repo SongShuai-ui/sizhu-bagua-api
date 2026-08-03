@@ -401,7 +401,6 @@ APP_HTML = """<!DOCTYPE html>
 <meta name="apple-mobile-web-app-title" content="问爻">
 <meta name="theme-color" content="#1c1917">
 <title>问爻 — 命理推演</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg:#fcfcfc; --card:#fff; --text:#1c1917; --sub:#8a837e; --border:#eaddd7;
@@ -414,7 +413,7 @@ APP_HTML = """<!DOCTYPE html>
   }
   * { box-sizing:border-box; margin:0; padding:0; }
   body {
-    font-family:"Inter","Noto Sans SC",system-ui,-apple-system,sans-serif;
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
     background:var(--bg); color:var(--text); min-height:100vh;
     -webkit-tap-highlight-color:transparent; overflow-x:hidden;
   }
@@ -424,7 +423,7 @@ APP_HTML = """<!DOCTYPE html>
     -webkit-backdrop-filter:blur(12px);
   }
   .header-inner { max-width:640px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
-  .logo { font-family:"Ma Shan Zheng","Noto Serif SC",serif; font-size:1.6rem; color:var(--accent2); letter-spacing:0.6em; }
+  .logo { font-family:"STKaiti","KaiTi","楷体",serif; font-size:1.6rem; color:var(--accent2); letter-spacing:0.6em; }
   .container { max-width:640px; margin:0 auto; padding:1rem 1rem 2rem; }
   .tabs { display:flex; gap:0.3rem; margin-bottom:0.8rem; background:var(--card); border-radius:var(--radius); padding:0.3rem; box-shadow:var(--shadow); }
   .tab { flex:1; padding:0.65rem 0.3rem; border:none; background:none; cursor:pointer; border-radius:8px; font-size:0.85rem; color:var(--sub); transition:all 0.2s; font-family:inherit; white-space:nowrap; }
@@ -454,13 +453,13 @@ APP_HTML = """<!DOCTYPE html>
   @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
   .result-block { margin-bottom:1rem; }
   .result-block h3 { font-size:0.85rem; color:var(--sub); margin-bottom:0.35rem; padding-bottom:0.25rem; border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:0.05em; font-weight:500; }
-  .bazi-big { font-family:"Noto Serif SC",serif; font-size:1.6rem; font-weight:700; text-align:center; letter-spacing:0.25em; margin:0.5rem 0; color:var(--accent2); }
+  .bazi-big { font-family:"STSong","SimSun","宋体",serif; font-size:1.6rem; font-weight:700; text-align:center; letter-spacing:0.25em; margin:0.5rem 0; color:var(--accent2); }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.5rem; }
   .tag { display:inline-block; padding:0.15rem 0.5rem; background:var(--bg); border-radius:6px; font-size:0.8rem; margin:0.1rem; }
   .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; }
   .loading-symbol { width:44px; height:44px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin-bottom:20px; }
   @keyframes spin { to{transform:rotate(360deg);} }
-  .loading-text { color:var(--text); font-size:1.1rem; font-weight:500; letter-spacing:0.1em; font-family:"Noto Serif SC",serif; }
+  .loading-text { color:var(--text); font-size:1.1rem; font-weight:500; letter-spacing:0.1em; font-family:"STSong","SimSun","宋体",serif; }
   .loading-sub { margin-top:6px; color:var(--sub); font-size:0.8rem; }
   .ai-box { margin-top:0.8rem; padding:1rem; background:var(--bg); border-radius:8px; border-left:3px solid var(--accent); animation:fadeIn 0.5s ease; }
   .ai-box h3 { font-size:0.9rem; color:var(--accent2); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.3rem; }
@@ -469,7 +468,7 @@ APP_HTML = """<!DOCTYPE html>
   .error { background:#fef2f2; border-left:3px solid var(--danger); padding:0.5rem 0.8rem; border-radius:0 6px 6px 0; color:var(--danger); font-size:0.8rem; margin-bottom:0.8rem; display:none; }
   @media(prefers-color-scheme:dark){ .error { background:#2a1010; } }
   .small { font-size:0.78rem; color:var(--sub); }
-  .yao-line { display:flex; align-items:center; gap:0.5rem; padding:0.2rem 0; font-family:"Noto Serif SC",serif; font-size:0.9rem; }
+  .yao-line { display:flex; align-items:center; gap:0.5rem; padding:0.2rem 0; font-family:"STSong","SimSun","宋体",serif; font-size:0.9rem; }
 </style>
 </head>
 <body>
