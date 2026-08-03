@@ -7,6 +7,7 @@
 import random
 from datetime import datetime
 from .safety import DISCLAIMER
+from .meihua import GUA64_MEANING, GUA64_INDEX
 
 # 六十四卦：(卦名, 世爻位置, 所属宫, 宫五行)
 GONG64 = {
@@ -56,6 +57,26 @@ _GUA_NAMES = {
 YAO_LABELS = ['初爻','二爻','三爻','四爻','五爻','上爻']
 YONG_SHEN = {
     '财运':'妻财','事业':'官鬼','感情':'妻财(男)/官鬼(女)','考试':'父母','子女':'子孙','合作':'兄弟',
+}
+
+# 六爻动爻断辞
+_YAO_MEANING = {
+    1: '初爻为事之始，根基所在。动则根基有变，事情的起步阶段会有波折。',
+    2: '二爻为事之中，发展之时。动则中途有变，事情的推进过程会出现转折。',
+    3: '三爻为内卦之极，事将外显。动则内有不安，内部因素影响大局。',
+    4: '四爻为外卦之始，近于上者。动则外力介入，外界因素开始起作用。',
+    5: '五爻为尊位，事之主宰。动则主导力量变化，关键人物或核心条件有变动。',
+    6: '上爻为事之终，结局所在。动则结局未定，最终结果仍有变数。',
+}
+
+_MOVING_COUNT_MEANING = {
+    0: '静卦：六爻安静，事情短期内变化不大，保持现状，宜守不宜攻。',
+    1: '一爻动：事情有明确的变动方向，动爻所在的位置指示了变化的具体领域。',
+    2: '两爻动：事情存在两股力量拉扯，需要做出选择。看哪个动爻离世爻更近，取近者为用。',
+    3: '三爻动：变化较多，内卦与外卦之间的平衡被打破。事情发展较为复杂。',
+    4: '四爻动：变动剧烈，宜看变卦来判断整体走向。',
+    5: '五爻动：几乎全部在变，事情处于剧烈动荡期。以变卦为主，本卦为辅来断。',
+    6: '六爻全动：大变大动，旧事将去，新局将至。以变卦为最终判断。',
 }
 
 
@@ -130,6 +151,32 @@ def compute_liuyao(numbers: list = None, question: str = '') -> dict:
             yongshen = v
             break
 
+    # 卦义解读
+    idx = GUA64_INDEX.get((xia, shang), 0)
+    gua_meaning = GUA64_MEANING.get(idx, '卦义待查')
+
+    # 动爻解读
+    moving_analysis = _MOVING_COUNT_MEANING.get(len(moving), '')
+    yao_details_analysis = [_YAO_MEANING.get(pos, '') for pos, _ in moving]
+
+    # 问题定向
+    yongshen_analysis = ''
+    if len(moving) == 0:
+        yongshen_analysis = '静卦宜守，不适合主动出击。如有明确计划，可等一等再行动。'
+    elif len(moving) == 1:
+        yongshen_analysis = '变动聚焦在一处，方向明确。按动爻的提示去推进。'
+    elif len(moving) >= 5:
+        yongshen_analysis = '变动太大，现在做决定为时过早。建议观望，等形势明朗。'
+    else:
+        yongshen_analysis = '多方变动，需要分清主次，抓住离世爻最近的动爻优先处理。'
+
+    analysis = {
+        'gua_meaning': gua_meaning,
+        'moving_count_analysis': moving_analysis,
+        'yao_analysis': yao_details_analysis,
+        'overall_advice': yongshen_analysis,
+    }
+
     return {
         'method': method,
         'question': question,
@@ -142,6 +189,7 @@ def compute_liuyao(numbers: list = None, question: str = '') -> dict:
         'moving_yaos': moving,
         'moving_count': len(moving),
         'yongshen': yongshen,
+        'analysis': analysis,
         'timestamp': datetime.now().isoformat(),
         'disclaimer': DISCLAIMER,
     }
@@ -177,6 +225,25 @@ def to_markdown(chart: dict) -> str:
 
     if chart['yongshen']:
         lines.append(f'\n**用神：** {chart["yongshen"]}')
+
+    # 解读
+    if 'analysis' in chart:
+        a = chart['analysis']
+        lines.extend([
+            '',
+            '## 解卦',
+            '',
+            f'**卦义：** {a["gua_meaning"]}',
+            '',
+            f'**变动分析：** {a["moving_count_analysis"]}',
+        ])
+        if a.get('yao_analysis'):
+            for yao_a in a['yao_analysis']:
+                lines.append(f'- {yao_a}')
+        lines.extend([
+            '',
+            f'**综合建议：** {a["overall_advice"]}',
+        ])
 
     lines.extend([
         '',
