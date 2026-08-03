@@ -393,9 +393,8 @@ APP_HTML = """<!DOCTYPE html>
 <body>
 
 <div class="header">
-  <div class="header-inner">
-    <div class="logo">🀄️ 四柱八卦<span>命理排盘</span></div>
-    <a href="/docs" class="small" style="text-decoration:none;">API 文档 →</a>
+  <div class="header-inner" style="justify-content:center;">
+    <div class="logo" style="font-size:1.5rem;">爻理天机</div>
   </div>
 </div>
 
@@ -407,6 +406,7 @@ APP_HTML = """<!DOCTYPE html>
     <button class="tab" data-tab="xingpan">⭐ 占星星盘</button>
   </div>
 
+  <div id="tab-desc" style="text-align:center;padding:0.8rem 1rem;color:var(--sub);font-size:0.9rem;line-height:1.6;max-width:600px;margin:0 auto;"></div>
   <div class="notice">⚠️ 本工具仅供传统文化研究与参考，不构成任何决策建议。</div>
   <div class="error" id="error"></div>
   <div class="loading" id="loading"><div class="spinner"></div>正在计算中...</div>
@@ -415,11 +415,11 @@ APP_HTML = """<!DOCTYPE html>
   <div class="card tab-content" id="tab-bazi">
     <h2>请输入出生信息</h2>
     <div class="form-row">
-      <div class="form-group"><label>年</label><input type="number" id="bz_year" value="1989" min="1900" max="2100"></div>
-      <div class="form-group"><label>月</label><input type="number" id="bz_month" value="6" min="1" max="12"></div>
-      <div class="form-group"><label>日</label><input type="number" id="bz_day" value="28" min="1" max="31"></div>
-      <div class="form-group"><label>时 (0-23)</label><input type="number" id="bz_hour" value="5" min="0" max="23"></div>
-      <div class="form-group"><label>分</label><input type="number" id="bz_min" value="30" min="0" max="59"></div>
+      <div class="form-group"><label>年</label><input type="number" id="bz_year" value="" placeholder="1989" min="1900" max="2100"></div>
+      <div class="form-group"><label>月</label><input type="number" id="bz_month" value="" placeholder="" min="1" max="12"></div>
+      <div class="form-group"><label>日</label><input type="number" id="bz_day" value="" placeholder="28" min="1" max="31"></div>
+      <div class="form-group"><label>时 (0-23)</label><input type="number" id="bz_hour" value="" placeholder="5" min="0" max="23"></div>
+      <div class="form-group"><label>分</label><input type="number" id="bz_min" value="" placeholder="30" min="0" max="59"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>性别</label><select id="bz_gender"><option>男</option><option>女</option></select></div>
@@ -427,27 +427,19 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doBazi()">排盘</button></div>
     </div>
     <div class="result" id="bz-result"></div>
-    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
-      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
-      <p class="small">八字即生辰八字，由年、月、日、时四柱组成，每柱一个天干一个地支。填入公历出生日期和时间后，系统自动计算四柱排盘、十神、藏干、纳音、大运流年与身强身弱。五行分布和喜用神可辅助了解自身气场偏向，大运流年展示人生各阶段运势走势。</p>
-    </div>
   </div>
 
   <!-- 梅花 -->
   <div class="card tab-content" id="tab-meihua" style="display:none;">
     <h2>梅花易数 — 三数起卦</h2>
     <div class="form-row">
-      <div class="form-group"><label>数字 1</label><input type="number" id="mh_a" value="5"></div>
+      <div class="form-group"><label>数字 1</label><input type="number" id="mh_a" value="" placeholder="5"></div>
       <div class="form-group"><label>数字 2</label><input type="number" id="mh_b" value="2"></div>
       <div class="form-group"><label>数字 3</label><input type="number" id="mh_c" value="0"></div>
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="mh_q" placeholder="如：问事业" style="width:200px;"></div>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doMeihua()">起卦</button></div>
     </div>
     <div class="result" id="mh-result"></div>
-    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
-      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
-      <p class="small">梅花易数以三个数字起卦，数字可来自日期、时间、页码等任意场景。系统根据数字推演出本卦（当前状态）、互卦（中间过程）、变卦（最终结果），并以体卦（自己）和用卦（外部）的生克关系判断吉凶。心中默念所问之事，随意取三个数即可。</p>
-    </div>
   </div>
 
   <!-- 六爻 -->
@@ -456,7 +448,7 @@ APP_HTML = """<!DOCTYPE html>
     <p class="small" style="margin-bottom:0.8rem;">输入6个数字起卦，或留空随机铜钱起卦</p>
     <div class="form-row">
       <div class="form-group"><label>数字1</label><input type="number" id="ly_n1" value="3" min="0" max="9"></div>
-      <div class="form-group"><label>数字2</label><input type="number" id="ly_n2" value="6" min="0" max="9"></div>
+      <div class="form-group"><label>数字2</label><input type="number" id="ly_n2" value="" placeholder="" min="0" max="9"></div>
       <div class="form-group"><label>数字3</label><input type="number" id="ly_n3" value="8" min="0" max="9"></div>
       <div class="form-group"><label>数字4</label><input type="number" id="ly_n4" value="4" min="0" max="9"></div>
       <div class="form-group"><label>数字5</label><input type="number" id="ly_n5" value="2" min="0" max="9"></div>
@@ -467,41 +459,41 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doLiuyao()">起卦</button></div>
     </div>
     <div class="result" id="ly-result"></div>
-    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
-      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
-      <p class="small">六爻以六个数字（0-9）起卦，每个数字对应一爻。填好六个数字后系统自动装卦，判断世爻（自己）、应爻（对方）、动爻（变数），并根据用神（财运看妻财、事业看官鬼等）和动爻位置进行解卦。也可留空所有数字，系统会用铜钱随机起卦。问题越具体，解卦越有针对性。</p>
-    </div>
   </div>
 
   <!-- 星盘 -->
   <div class="card tab-content" id="tab-xingpan" style="display:none;">
     <h2>请输入出生信息</h2>
     <div class="form-row">
-      <div class="form-group"><label>年</label><input type="number" id="xp_year" value="1989" min="1900" max="2100"></div>
-      <div class="form-group"><label>月</label><input type="number" id="xp_month" value="6" min="1" max="12"></div>
-      <div class="form-group"><label>日</label><input type="number" id="xp_day" value="28" min="1" max="31"></div>
-      <div class="form-group"><label>时 (0-23)</label><input type="number" id="xp_hour" value="5" min="0" max="23"></div>
-      <div class="form-group"><label>分</label><input type="number" id="xp_min" value="30" min="0" max="59"></div>
+      <div class="form-group"><label>年</label><input type="number" id="xp_year" value="" placeholder="1989" min="1900" max="2100"></div>
+      <div class="form-group"><label>月</label><input type="number" id="xp_month" value="" placeholder="" min="1" max="12"></div>
+      <div class="form-group"><label>日</label><input type="number" id="xp_day" value="" placeholder="28" min="1" max="31"></div>
+      <div class="form-group"><label>时 (0-23)</label><input type="number" id="xp_hour" value="" placeholder="5" min="0" max="23"></div>
+      <div class="form-group"><label>分</label><input type="number" id="xp_min" value="" placeholder="30" min="0" max="59"></div>
       <div class="form-group"><label>出生地（可选）</label><input type="text" id="xp_place" placeholder="如：北京" style="width:180px;"></div>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doXingpan()">排盘</button></div>
     </div>
     <div class="result" id="xp-result"></div>
-    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
-      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
-      <p class="small">占星星盘基于西方占星学，根据出生时间和地点计算行星在黄道十二宫中的位置。太阳星座代表核心性格，月亮星座反映内在情感，上升星座是给外界的第一印象。填写出生地可获得更准确的上升/天顶度数。元素分布（火土风水）显示性格倾向，日月关系揭示内外是否一致。</p>
-    </div>
   </div>
 </div>
 
 <script>
 const API = '';
-const tabs = document.querySelectorAll('.tab');
-tabs.forEach(t => t.addEventListener('click', () => {
+const tabDescs = {
+  bazi: '八字由年、月、日、时四柱组成。填入公历出生时间，系统自动排盘并分析十神、藏干、纳音、大运流年与身强身弱。五行分布和喜用神助你了解自身气场偏向。',
+  meihua: '梅花易数以三个数字起卦，数字可来自日期、页码等任意场景。系统推演本卦（现状）、互卦（过程）、变卦（结果），以体用生克断吉凶。默念问题，随意取三数。',
+  liuyao: '六爻以六个数字（0-9）起卦，每数对应一爻。填好后系统自动装卦，判断世应、动爻并解卦。数字留空则随机铜钱起卦。问题越具体，解卦越准。',
+  xingpan: '占星星盘基于西方占星学。太阳星座代表核心性格，月亮反映内在情感，上升是给人的第一印象。填写出生地可获更精准的上升/天顶度数。'
+};
+function switchTab(name) {
   tabs.forEach(x => x.classList.remove('active'));
-  t.classList.add('active');
+  document.querySelector('[data-tab="'+name+'"]').classList.add('active');
   document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
-  document.getElementById('tab-' + t.dataset.tab).style.display = '';
-}));
+  document.getElementById('tab-'+name).style.display = '';
+  document.getElementById('tab-desc').textContent = tabDescs[name] || '';
+}
+tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
+switchTab('bazi');
 
 function showErr(msg) { const e = document.getElementById('error'); e.textContent = msg; e.style.display = msg ? 'block' : 'none'; }
 function loading(s) { document.getElementById('loading').classList.toggle('show', s); }
