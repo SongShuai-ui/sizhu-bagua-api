@@ -480,12 +480,16 @@ APP_HTML = """<!DOCTYPE html>
   <div class="loading-sub">问爻 · 命理推演</div>
 </div>
 <script>
-window.addEventListener('load', function() {
-  setTimeout(function() {
-    var el = document.getElementById('loading-screen');
-    if (el) { el.style.transition = 'opacity 0.4s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 400); }
-  }, 300);
-});
+(function hideLoader() {
+  var el = document.getElementById('loading-screen');
+  if (el && document.readyState === 'complete') {
+    el.style.transition = 'opacity 0.4s';
+    el.style.opacity = '0';
+    setTimeout(function() { el.remove(); }, 400);
+  } else {
+    setTimeout(hideLoader, 100);
+  }
+})();
 </script>
 
 <div class="header">
