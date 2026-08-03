@@ -339,4 +339,5 @@ DOC_HTML = """<!DOCTYPE html>
 # ── 启动入口 ──
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("api_server:app", host="0.0.0.0", port=8001, reload=True)
+    port = int(os.environ.get("PORT", 8001))
+    uvicorn.run("api_server:app", host="0.0.0.0", port=port, reload=True)
