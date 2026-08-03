@@ -33,8 +33,7 @@ from src.liuyao import compute_liuyao
 from src.xingpan import compute_xingpan
 from src.report import to_markdown as bazi_to_md
 from src.safety import DISCLAIMER
-# AI 模块暂时禁用
-# from src.ai_interpret import interpret_bazi, interpret_meihua, interpret_liuyao, interpret_xingpan
+from src.ai_interpret import interpret_bazi, interpret_meihua, interpret_liuyao, interpret_xingpan
 
 # ── Helpers ──
 def _normalize_gender(g: str) -> str:
@@ -199,9 +198,53 @@ def xingpan(request: XingpanRequest):
         )
 
 
-# ── AI 解读（暂时禁用）──
-# @app.post("/api/v1/bazi/ai", tags=["AI解读"])
-# def bazi_ai(request: BaziRequest): ...
+# ── AI 解读 ──
+@app.post("/api/v1/bazi/ai", tags=["AI解读"])
+def bazi_ai(request: BaziRequest):
+    """八字 AI 白话解读"""
+    gender = _normalize_gender(request.gender)
+    chart = compute_bazi(request.year, request.month, request.day, request.hour, request.minute, gender, request.birthplace)
+    try:
+        text = interpret_bazi(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
+
+@app.post("/api/v1/meihua/ai", tags=["AI解读"])
+def meihua_ai(request: MeihuaRequest):
+    """梅花易数 AI 白话解读"""
+    chart = compute_meihua(request.a, request.b, request.c, request.question)
+    try:
+        text = interpret_meihua(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
+
+@app.post("/api/v1/liuyao/ai", tags=["AI解读"])
+def liuyao_ai(request: LiuyaoRequest = None):
+    """六爻 AI 白话解读"""
+    numbers = request.numbers if request else None
+    question = request.question if request else ""
+    chart = compute_liuyao(numbers=numbers, question=question)
+    try:
+        text = interpret_liuyao(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
+
+@app.post("/api/v1/xingpan/ai", tags=["AI解读"])
+def xingpan_ai(request: XingpanRequest):
+    """星盘 AI 白话解读"""
+    chart = compute_xingpan(request.year, request.month, request.day, request.hour, request.minute, request.birthplace)
+    try:
+        text = interpret_xingpan(chart)
+        return {"code": 0, "data": {"chart": chart, "ai_reading": text}}
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"code": 1, "error": f"AI 解读失败: {e}"})
+
 
 # ── 用户端应用 ──
 @app.get("/app", response_class=HTMLResponse, include_in_schema=False)
