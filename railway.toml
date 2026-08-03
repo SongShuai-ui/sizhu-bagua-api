@@ -2,5 +2,5 @@
 builder = "docker"
 
 [deploy]
-startCommand = "uvicorn api_server:app --host 0.0.0.0 --port ${PORT:-8001}"
+startCommand = "python -m uvicorn api_server:app --host 0.0.0.0 --port ${PORT:-8001}"
 restartPolicyType = "always"

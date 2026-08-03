@@ -17,4 +17,4 @@ echo "   文档: http://localhost:${PORT}/docs"
 echo ""
 
 cd "$(dirname "$0")"
-uvicorn api_server:app --host 0.0.0.0 --port "$PORT" $RELOAD
+python -m uvicorn api_server:app --host 0.0.0.0 --port "$PORT" $RELOAD
