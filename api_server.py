@@ -477,8 +477,16 @@ APP_HTML = """<!DOCTYPE html>
 <div id="loading-screen" class="loading-overlay">
   <div class="loading-symbol"></div>
   <div class="loading-text">天机推演中</div>
-  <div class="loading-sub">Loading...</div>
+  <div class="loading-sub">问爻 · 命理推演</div>
 </div>
+<script>
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    var el = document.getElementById('loading-screen');
+    if (el) { el.style.transition = 'opacity 0.4s'; el.style.opacity = '0'; setTimeout(function() { el.remove(); }, 400); }
+  }, 300);
+});
+</script>
 
 <div class="header">
   <div class="header-inner">
