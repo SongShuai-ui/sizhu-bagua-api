@@ -427,6 +427,10 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doBazi()">排盘</button></div>
     </div>
     <div class="result" id="bz-result"></div>
+    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
+      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
+      <p class="small">八字即生辰八字，由年、月、日、时四柱组成，每柱一个天干一个地支。填入公历出生日期和时间后，系统自动计算四柱排盘、十神、藏干、纳音、大运流年与身强身弱。五行分布和喜用神可辅助了解自身气场偏向，大运流年展示人生各阶段运势走势。</p>
+    </div>
   </div>
 
   <!-- 梅花 -->
@@ -440,6 +444,10 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doMeihua()">起卦</button></div>
     </div>
     <div class="result" id="mh-result"></div>
+    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
+      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
+      <p class="small">梅花易数以三个数字起卦，数字可来自日期、时间、页码等任意场景。系统根据数字推演出本卦（当前状态）、互卦（中间过程）、变卦（最终结果），并以体卦（自己）和用卦（外部）的生克关系判断吉凶。心中默念所问之事，随意取三个数即可。</p>
+    </div>
   </div>
 
   <!-- 六爻 -->
@@ -459,6 +467,10 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doLiuyao()">起卦</button></div>
     </div>
     <div class="result" id="ly-result"></div>
+    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
+      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
+      <p class="small">六爻以六个数字（0-9）起卦，每个数字对应一爻。填好六个数字后系统自动装卦，判断世爻（自己）、应爻（对方）、动爻（变数），并根据用神（财运看妻财、事业看官鬼等）和动爻位置进行解卦。也可留空所有数字，系统会用铜钱随机起卦。问题越具体，解卦越有针对性。</p>
+    </div>
   </div>
 
   <!-- 星盘 -->
@@ -474,6 +486,10 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doXingpan()">排盘</button></div>
     </div>
     <div class="result" id="xp-result"></div>
+    <div style="padding:1rem 0 0;border-top:1px solid var(--border);margin-top:1rem;">
+      <h3 style="font-size:0.9rem;color:var(--sub);margin-bottom:0.4rem;">📖 使用说明</h3>
+      <p class="small">占星星盘基于西方占星学，根据出生时间和地点计算行星在黄道十二宫中的位置。太阳星座代表核心性格，月亮星座反映内在情感，上升星座是给外界的第一印象。填写出生地可获得更准确的上升/天顶度数。元素分布（火土风水）显示性格倾向，日月关系揭示内外是否一致。</p>
+    </div>
   </div>
 </div>
 
