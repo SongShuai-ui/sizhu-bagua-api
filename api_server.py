@@ -33,7 +33,7 @@ from src.liuyao import compute_liuyao
 from src.xingpan import compute_xingpan
 from src.report import to_markdown as bazi_to_md
 from src.safety import DISCLAIMER
-from src.ai_interpret import interpret_bazi, interpret_meihua, interpret_liuyao, interpret_xingpan
+# from src.ai_interpret import interpret_bazi, interpret_meihua, interpret_liuyao, interpret_xingpan
 
 # ── Helpers ──
 def _normalize_gender(g: str) -> str:
@@ -198,7 +198,7 @@ def xingpan(request: XingpanRequest):
         )
 
 
-# ── AI 解读 ──
+# ── AI 解读（待修复）──
 @app.post("/api/v1/bazi/ai", tags=["AI解读"])
 def bazi_ai(request: BaziRequest):
     """八字 AI 白话解读"""
