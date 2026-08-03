@@ -1,0 +1,165 @@
+{
+  "input": {
+    "year": 1989,
+    "month": 6,
+    "day": 28,
+    "hour": 5,
+    "minute": 30,
+    "gender": "男",
+    "birthplace": "林州"
+  },
+  "solar_datetime": "1989-06-28T05:30:00",
+  "adjusted_datetime": "1989-06-28T05:30:00+08:00",
+  "true_solar_time_used": false,
+  "pillars": {
+    "year": {
+      "gan": "己",
+      "zhi": "巳"
+    },
+    "month": {
+      "gan": "庚",
+      "zhi": "午"
+    },
+    "day": {
+      "gan": "己",
+      "zhi": "未"
+    },
+    "hour": {
+      "gan": "丁",
+      "zhi": "卯"
+    }
+  },
+  "ten_gods": {
+    "year_gan": "比肩",
+    "month_gan": "伤官",
+    "day_gan": "日元",
+    "hour_gan": "偏印"
+  },
+  "hidden_stems": {
+    "year": [
+      "丙",
+      "庚",
+      "戊"
+    ],
+    "month": [
+      "丁",
+      "己"
+    ],
+    "day": [
+      "己",
+      "丁",
+      "乙"
+    ],
+    "hour": [
+      "乙"
+    ]
+  },
+  "five_elements": {
+    "木": 1.6,
+    "火": 3.9,
+    "土": 3.9,
+    "金": 1.3,
+    "水": 0.0
+  },
+  "day_master": {
+    "gan": "己",
+    "zhi": "未",
+    "element": "土",
+    "shengxiao": "蛇"
+  },
+  "nayin": {
+    "year": "大林木",
+    "month": "路旁土",
+    "day": "天上火",
+    "hour": "炉中火"
+  },
+  "strength_analysis": {
+    "verdict": "身强",
+    "same_party_score": 10.8,
+    "opposing_party_score": 3.4,
+    "useful_elements": [
+      "水",
+      "金",
+      "木"
+    ],
+    "harmful_elements": [
+      "土",
+      "火"
+    ],
+    "reasoning": "日主己(土)生于午月（火），同党10.8 vs 异党3.4，月令得令"
+  },
+  "luck": {
+    "direction": "逆排",
+    "qiyun_age": {
+      "years": 7,
+      "months": 4
+    },
+    "pre_qiyun": [
+      {
+        "ganzhi": "",
+        "start_age": 1,
+        "end_age": 7,
+        "note": "童限（起运前）"
+      }
+    ],
+    "cycles": [
+      {
+        "ganzhi": "己巳",
+        "start_age": 8,
+        "end_age": 17
+      },
+      {
+        "ganzhi": "戊辰",
+        "start_age": 18,
+        "end_age": 27
+      },
+      {
+        "ganzhi": "丁卯",
+        "start_age": 28,
+        "end_age": 37
+      },
+      {
+        "ganzhi": "丙寅",
+        "start_age": 38,
+        "end_age": 47
+      },
+      {
+        "ganzhi": "乙丑",
+        "start_age": 48,
+        "end_age": 57
+      },
+      {
+        "ganzhi": "甲子",
+        "start_age": 58,
+        "end_age": 67
+      },
+      {
+        "ganzhi": "癸亥",
+        "start_age": 68,
+        "end_age": 77
+      },
+      {
+        "ganzhi": "壬戌",
+        "start_age": 78,
+        "end_age": 87
+      },
+      {
+        "ganzhi": "辛酉",
+        "start_age": 88,
+        "end_age": 97
+      }
+    ],
+    "current": {
+      "ganzhi": "丁卯",
+      "start_age": 28,
+      "end_age": 37
+    }
+  },
+  "annual_fortune": {
+    "year": 2026,
+    "ganzhi": "丙午",
+    "ten_god": "正印"
+  },
+  "current_age": 37,
+  "disclaimer": "以上分析基于传统命理学，仅供参考。\n本报告不构成以下建议：寿命判断、疾病诊断、投资买卖、赌博彩票、法律事务。\n人生重大决策请结合现实情况独立判断。"
+}

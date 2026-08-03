@@ -1,0 +1,240 @@
+# 八字解盘规则知识库 v2
+# 每条规则标注来源类型和可信度，不直接塞进 AI prompt。
+#
+# source_type: classical(古籍口诀) | modern(现代经验) | marketing(营销表达)
+# confidence: confirmed(已验证) | plausible(合理推断) | unverified(待验证)
+# risk_level: safe | caution(含风险内容需上下文过滤) | banned(禁止输出)
+
+rules:
+  # ============================================================
+  # 核心理论 — 滴天髓
+  # ============================================================
+  - id: "DTS-001"
+    category: "核心理论"
+    title: "三元根本"
+    condition: "all"
+    interpretation: "天干衰弱看地支是否生扶，地支衰弱看天干是否辅助。天干为天元，地支为地元，藏干为人元。"
+    caution: null
+    source: "滴天髓·通神论"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "DTS-002"
+    category: "核心理论"
+    title: "顺逆之理"
+    condition: "all"
+    interpretation: "顺者接续相生为有情，逆者反克为害为无情。判断吉凶要看作柱间是扶助还是克制。"
+    caution: null
+    source: "滴天髓·通神论"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "DTS-003"
+    category: "核心理论"
+    title: "理气进退"
+    condition: "all"
+    interpretation: "将来者进是谓相（方长之气），进而当令是谓旺（极盛将退），功成者退是谓休，退而无气是谓囚。相妙于旺。"
+    caution: null
+    source: "滴天髓·理气"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "DTS-004"
+    category: "核心理论"
+    title: "用神真义"
+    condition: "all"
+    interpretation: "用之为财不可劫，用之为官不可伤，用之印绶不可坏，用之食神不可夺。关键在'用'字——不用财星尽可劫。"
+    caution: null
+    source: "滴天髓·知命"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "DTS-005"
+    category: "核心理论"
+    title: "中和为贵"
+    condition: "all"
+    interpretation: "命贵中和，偏枯终于有损。五行严重偏枯的命格多有缺憾。"
+    caution: "不可机械理解——特殊格局如从格不适用中和原则"
+    source: "滴天髓"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  # ============================================================
+  # 身强身弱规则
+  # ============================================================
+  - id: "STR-001"
+    category: "强弱判断"
+    title: "得令原则"
+    condition: "日主五行 == 月令五行 或 月令五行生扶日主"
+    interpretation: "月令为日主同党时，得令加分。月令是判断身强身弱的最重要因素。"
+    caution: "需结合得地、得势综合判断"
+    source: "现代命理学"
+    source_type: "modern"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "STR-002"
+    category: "强弱判断"
+    title: "得地原则"
+    condition: "日主在地支有根（同五行地支或藏干含日主五行）"
+    interpretation: "地支有根则日主不虚浮。根深则不惧克泄。"
+    caution: null
+    source: "现代命理学"
+    source_type: "modern"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "STR-003"
+    category: "强弱判断"
+    title: "身强喜忌"
+    condition: "strength_verdict == '身强'"
+    interpretation: "身强者喜克泄耗（官杀、食伤、财），忌生扶（印、比劫）。"
+    caution: "特殊格局如专旺格不适用"
+    source: "现代命理学"
+    source_type: "modern"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "STR-004"
+    category: "强弱判断"
+    title: "身弱喜忌"
+    condition: "strength_verdict == '身弱'"
+    interpretation: "身弱者喜生扶（印、比劫），忌克泄耗（官杀、食伤、财）。"
+    caution: "从格不适用"
+    source: "现代命理学"
+    source_type: "modern"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  # ============================================================
+  # 大运规则
+  # ============================================================
+  - id: "LUK-001"
+    category: "大运"
+    title: "排大运方向"
+    condition: "all"
+    interpretation: "阳年男阴年女顺排，阴年男阳年女逆排。阳年：甲丙戊庚壬年。阴年：乙丁己辛癸年。"
+    caution: "年柱以立春为界，不是公历1月1日"
+    source: "渊海子平"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "LUK-002"
+    category: "大运"
+    title: "起运年龄计算"
+    condition: "all"
+    interpretation: "出生日到下一个（顺排）或上一个（逆排）节气的天数除以3。三天为一岁，一天为四月。"
+    caution: "需精确到节气时刻，不能用固定日期近似"
+    source: "渊海子平"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  # ============================================================
+  # 十干各月断诀 — 命理正宗（金不换）
+  # ============================================================
+  - id: "JJ-001"
+    category: "十干各月"
+    title: "己土巳月身强宜走木运"
+    condition: "日干 == '己' and 月支 == '巳'"
+    interpretation: "身强最宜走木运（官杀为用）。原诀：'身强最宜走木运，无财逆运亦相应。'"
+    caution: "需先确认身强。古籍原含寿命相关断语已去除。"
+    source: "命理正宗·金不换"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "caution"
+    risk_note: "古籍原含'顺运寅卯早凋零'等断语，引用时需去除寿命判定"
+
+  - id: "JJ-002"
+    category: "十干各月"
+    title: "己土午月官柔喜顺运"
+    condition: "日干 == '己' and 月支 == '午'"
+    interpretation: "己土生于午月建禄格。官柔最喜走顺运。"
+    caution: "原诀含'官轻逆运亦荣昌'，需结合具体命局"
+    source: "命理正宗·金不换"
+    source_type: "classical"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  # ============================================================
+  # 十神位置断
+  # ============================================================
+  - id: "TSW-001"
+    category: "十神位置"
+    title: "日坐正官性聪明"
+    condition: "日支为日主正官"
+    interpretation: "日坐正官者性格聪明，有担当。"
+    caution: "需结合整体格局，不可单论"
+    source: "命理正宗"
+    source_type: "classical"
+    confidence: "plausible"
+    risk_level: "safe"
+
+  - id: "TSW-002"
+    category: "十神位置"
+    title: "月上正财一生富贵"
+    condition: "月干为正财"
+    interpretation: "月上正财者有稳定财源，一生富贵在命间。"
+    caution: "此为理想化断语，实际需看财星是否得用"
+    source: "命理正宗"
+    source_type: "classical"
+    confidence: "plausible"
+    risk_level: "safe"
+
+  # ============================================================
+  # 婚姻感情
+  # ============================================================
+  - id: "LOV-001"
+    category: "婚姻"
+    title: "日支看婚姻宫"
+    condition: "all"
+    interpretation: "男命以正财为妻，女命以正官为夫。日支为夫妻宫，看配偶性格。"
+    caution: "需结合十神和五行综合判断，不可单看日支"
+    source: "现代命理学"
+    source_type: "modern"
+    confidence: "confirmed"
+    risk_level: "safe"
+
+  - id: "LOV-002"
+    category: "婚姻"
+    title: "比肩坐妻宫"
+    condition: "日支比肩"
+    interpretation: "配偶性格与自己相似，独立务实。相处如战友而非甜宠。"
+    caution: "不能单凭日支判断婚姻好坏"
+    source: "现代命理学"
+    source_type: "modern"
+    confidence: "plausible"
+    risk_level: "safe"
+
+  # ============================================================
+  # 标记为 banned 的规则（古籍中含危险内容，仅存档不输出）
+  # ============================================================
+  - id: "BAN-001"
+    category: "禁止输出"
+    title: "盲师断运篇（含寿命断语）"
+    condition: "NEVER_OUTPUT"
+    interpretation: "金衰木绝土怕养，火遇病字不久长。土命生人怕旺木，水逢死绝是灾殃。"
+    caution: "此规则永久禁止在报告中引用，仅作为算法参考保留"
+    source: "盲师断命秘诀集锦"
+    source_type: "classical"
+    confidence: "unverified"
+    risk_level: "banned"
+    risk_note: "古籍原含大量寿命判断断语，全部禁止输出"
+
+  - id: "BAN-002"
+    category: "禁止输出"
+    title: "老年就怕长生运"
+    condition: "NEVER_OUTPUT"
+    interpretation: "老年就怕长生运，如遇刑冲难还阳。"
+    caution: "此规则永久禁止输出"
+    source: "盲师断运篇"
+    source_type: "classical"
+    confidence: "unverified"
+    risk_level: "banned"
+    risk_note: "含寿命判断"
