@@ -394,7 +394,7 @@ APP_HTML = """<!DOCTYPE html>
 
 <div class="header">
   <div class="header-inner" style="justify-content:center;">
-    <div class="logo" style="font-size:1.5rem;">爻理天机</div>
+    <div class="logo" style="font-size:1.5rem;letter-spacing:0.6em;">☰ 问  爻</div>
   </div>
 </div>
 
@@ -416,7 +416,7 @@ APP_HTML = """<!DOCTYPE html>
     <h2>请输入出生信息</h2>
     <div class="form-row">
       <div class="form-group"><label>年</label><input type="number" id="bz_year" value="" placeholder="1989" min="1900" max="2100"></div>
-      <div class="form-group"><label>月</label><input type="number" id="bz_month" value="" placeholder="" min="1" max="12"></div>
+      <div class="form-group"><label>月</label><input type="number" id="bz_month" value="" placeholder="6" min="1" max="12"></div>
       <div class="form-group"><label>日</label><input type="number" id="bz_day" value="" placeholder="28" min="1" max="31"></div>
       <div class="form-group"><label>时 (0-23)</label><input type="number" id="bz_hour" value="" placeholder="5" min="0" max="23"></div>
       <div class="form-group"><label>分</label><input type="number" id="bz_min" value="" placeholder="30" min="0" max="59"></div>
@@ -434,8 +434,8 @@ APP_HTML = """<!DOCTYPE html>
     <h2>梅花易数 — 三数起卦</h2>
     <div class="form-row">
       <div class="form-group"><label>数字 1</label><input type="number" id="mh_a" value="" placeholder="5"></div>
-      <div class="form-group"><label>数字 2</label><input type="number" id="mh_b" value="2"></div>
-      <div class="form-group"><label>数字 3</label><input type="number" id="mh_c" value="0"></div>
+      <div class="form-group"><label>数字 2</label><input type="number" id="mh_b" value="" placeholder="2"></div>
+      <div class="form-group"><label>数字 3</label><input type="number" id="mh_c" value="" placeholder="0"></div>
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="mh_q" placeholder="如：问事业" style="width:200px;"></div>
       <div class="form-group" style="align-self:flex-end;"><button class="btn" onclick="doMeihua()">起卦</button></div>
     </div>
@@ -447,12 +447,12 @@ APP_HTML = """<!DOCTYPE html>
     <h2>六爻预测</h2>
     <p class="small" style="margin-bottom:0.8rem;">输入6个数字起卦，或留空随机铜钱起卦</p>
     <div class="form-row">
-      <div class="form-group"><label>数字1</label><input type="number" id="ly_n1" value="3" min="0" max="9"></div>
+      <div class="form-group"><label>数字1</label><input type="number" id="ly_n1" value="" placeholder="3" min="0" max="9"></div>
       <div class="form-group"><label>数字2</label><input type="number" id="ly_n2" value="" placeholder="" min="0" max="9"></div>
-      <div class="form-group"><label>数字3</label><input type="number" id="ly_n3" value="8" min="0" max="9"></div>
-      <div class="form-group"><label>数字4</label><input type="number" id="ly_n4" value="4" min="0" max="9"></div>
-      <div class="form-group"><label>数字5</label><input type="number" id="ly_n5" value="2" min="0" max="9"></div>
-      <div class="form-group"><label>数字6</label><input type="number" id="ly_n6" value="9" min="0" max="9"></div>
+      <div class="form-group"><label>数字3</label><input type="number" id="ly_n3" value="" placeholder="8" min="0" max="9"></div>
+      <div class="form-group"><label>数字4</label><input type="number" id="ly_n4" value="" placeholder="4" min="0" max="9"></div>
+      <div class="form-group"><label>数字5</label><input type="number" id="ly_n5" value="" placeholder="2" min="0" max="9"></div>
+      <div class="form-group"><label>数字6</label><input type="number" id="ly_n6" value="" placeholder="9" min="0" max="9"></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="ly_q" placeholder="如：问财运" style="width:200px;"></div>
@@ -466,7 +466,7 @@ APP_HTML = """<!DOCTYPE html>
     <h2>请输入出生信息</h2>
     <div class="form-row">
       <div class="form-group"><label>年</label><input type="number" id="xp_year" value="" placeholder="1989" min="1900" max="2100"></div>
-      <div class="form-group"><label>月</label><input type="number" id="xp_month" value="" placeholder="" min="1" max="12"></div>
+      <div class="form-group"><label>月</label><input type="number" id="xp_month" value="" placeholder="6" min="1" max="12"></div>
       <div class="form-group"><label>日</label><input type="number" id="xp_day" value="" placeholder="28" min="1" max="31"></div>
       <div class="form-group"><label>时 (0-23)</label><input type="number" id="xp_hour" value="" placeholder="5" min="0" max="23"></div>
       <div class="form-group"><label>分</label><input type="number" id="xp_min" value="" placeholder="30" min="0" max="59"></div>
@@ -479,6 +479,7 @@ APP_HTML = """<!DOCTYPE html>
 
 <script>
 const API = '';
+const tabs = document.querySelectorAll('.tab');
 const tabDescs = {
   bazi: '八字由年、月、日、时四柱组成。填入公历出生时间，系统自动排盘并分析十神、藏干、纳音、大运流年与身强身弱。五行分布和喜用神助你了解自身气场偏向。',
   meihua: '梅花易数以三个数字起卦，数字可来自日期、页码等任意场景。系统推演本卦（现状）、互卦（过程）、变卦（结果），以体用生克断吉凶。默念问题，随意取三数。',
