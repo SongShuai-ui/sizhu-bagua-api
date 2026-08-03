@@ -395,70 +395,108 @@ APP_HTML = """<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>四柱八卦 — 命理排盘</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="问爻">
+<meta name="theme-color" content="#1c1917">
+<title>问爻 — 命理推演</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#f8f6f2; --card:#fff; --text:#2c2416; --sub:#8b7355; --border:#e5d5c0; --accent:#c9a96e; --accent2:#8b6914; --danger:#c0392b; --input-bg:#fff; --shadow:0 2px 12px rgba(0,0,0,0.06); }
-  @media(prefers-color-scheme:dark){ :root { --bg:#1a1814; --card:#24211a; --text:#e8dcc8; --sub:#9b8b70; --border:#3a3224; --accent:#d4b87a; --accent2:#e0c88a; --input-bg:#2a261e; --shadow:0 2px 12px rgba(0,0,0,0.3); } }
+  :root {
+    --bg:#fcfcfc; --card:#fff; --text:#1c1917; --sub:#8a837e; --border:#eaddd7;
+    --accent:#f59e0b; --accent2:#d97706; --accent-light:#fef3c7;
+    --danger:#dc2626; --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+    --radius:10px;
+  }
+  @media(prefers-color-scheme:dark){
+    :root { --bg:#1c1917; --card:#292524; --text:#fafaf9; --sub:#a8a29e; --border:#44403c; --accent-light:#3a2a10; --shadow:0 1px 3px rgba(0,0,0,0.3); }
+  }
   * { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
-  .header { background:var(--card); border-bottom:1px solid var(--border); padding:1rem 1.5rem; box-shadow:var(--shadow); position:sticky; top:0; z-index:10; }
-  .header-inner { max-width:800px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
-  .logo { font-size:1.3rem; font-weight:700; color:var(--accent2); }
-  .logo span { font-size:0.8rem; color:var(--sub); margin-left:0.5rem; font-weight:400; }
-  .container { max-width:800px; margin:0 auto; padding:1.5rem; }
-  .tabs { display:flex; gap:0.25rem; margin-bottom:1.5rem; background:var(--card); border-radius:12px; padding:0.3rem; box-shadow:var(--shadow); }
-  .tab { flex:1; padding:0.7rem 0.5rem; border:none; background:none; cursor:pointer; border-radius:10px; font-size:0.95rem; color:var(--sub); transition:all 0.2s; font-family:inherit; }
-  .tab.active { background:var(--accent); color:#fff; font-weight:600; }
-  .tab:hover:not(.active) { color:var(--text); }
-  .card { background:var(--card); border-radius:12px; padding:1.5rem; margin-bottom:1rem; box-shadow:var(--shadow); }
-  .card h2 { font-size:1.1rem; margin-bottom:1rem; color:var(--accent2); }
-  .form-row { display:flex; gap:0.8rem; margin-bottom:0.8rem; flex-wrap:wrap; }
-  .form-group { display:flex; flex-direction:column; gap:0.25rem; }
-  .form-group label { font-size:0.8rem; color:var(--sub); }
-  .form-group input, .form-group select { padding:0.6rem 0.8rem; border:1px solid var(--border); border-radius:8px; font-size:0.95rem; background:var(--input-bg); color:var(--text); font-family:inherit; outline:none; transition:border 0.2s; }
-  .form-group input:focus, .form-group select:focus { border-color:var(--accent); }
-  .btn { padding:0.65rem 1.8rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-size:0.95rem; cursor:pointer; font-weight:600; font-family:inherit; transition:all 0.2s; }
-  .btn:hover { background:var(--accent2); }
-  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+  body {
+    font-family:"Inter","Noto Sans SC",system-ui,-apple-system,sans-serif;
+    background:var(--bg); color:var(--text); min-height:100vh;
+    -webkit-tap-highlight-color:transparent; overflow-x:hidden;
+  }
+  .header {
+    background:var(--card); border-bottom:1px solid var(--border);
+    padding:1rem 1.5rem; position:sticky; top:0; z-index:10; backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+  }
+  .header-inner { max-width:640px; margin:0 auto; display:flex; align-items:center; justify-content:center; }
+  .logo { font-family:"Ma Shan Zheng","Noto Serif SC",serif; font-size:1.6rem; color:var(--accent2); letter-spacing:0.6em; }
+  .container { max-width:640px; margin:0 auto; padding:1rem 1rem 2rem; }
+  .tabs { display:flex; gap:0.3rem; margin-bottom:0.8rem; background:var(--card); border-radius:var(--radius); padding:0.3rem; box-shadow:var(--shadow); }
+  .tab { flex:1; padding:0.65rem 0.3rem; border:none; background:none; cursor:pointer; border-radius:8px; font-size:0.85rem; color:var(--sub); transition:all 0.2s; font-family:inherit; white-space:nowrap; }
+  .tab.active { background:var(--accent); color:#fff; font-weight:600; box-shadow:0 2px 8px rgba(245,158,11,0.3); }
+  .card { background:var(--card); border-radius:var(--radius); padding:1.25rem; margin-bottom:0.8rem; box-shadow:var(--shadow); }
+  .card h2 { font-size:1rem; margin-bottom:0.8rem; color:var(--text); font-weight:600; }
+  .form-row { display:flex; gap:0.5rem; margin-bottom:0.5rem; flex-wrap:wrap; }
+  .form-group { display:flex; flex-direction:column; gap:0.2rem; }
+  .form-group label { font-size:0.75rem; color:var(--sub); font-weight:500; }
+  .form-group input, .form-group select {
+    padding:0.55rem 0.7rem; border:1px solid var(--border); border-radius:8px;
+    font-size:0.9rem; background:var(--card); color:var(--text); font-family:inherit;
+    outline:none; transition:border 0.2s; min-width:0;
+  }
+  .form-group input:focus, .form-group select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(245,158,11,0.1); }
+  .btn {
+    padding:0.55rem 1.4rem; background:var(--accent); color:#fff; border:none;
+    border-radius:8px; font-size:0.9rem; cursor:pointer; font-weight:600;
+    font-family:inherit; transition:all 0.2s; white-space:nowrap;
+  }
+  .btn:hover { background:var(--accent2); transform:translateY(-1px); }
+  .btn:active { transform:translateY(0); }
+  .btn-ai { background:var(--card); color:var(--accent2); border:1.5px solid var(--accent); }
+  .btn-ai:hover { background:var(--accent-light); }
   .result { display:none; }
-  .result.show { display:block; }
-  .result-block { margin-bottom:1.2rem; }
-  .result-block h3 { font-size:0.95rem; color:var(--accent2); margin-bottom:0.4rem; padding-bottom:0.3rem; border-bottom:1px solid var(--border); }
-  .bazi-big { font-size:1.8rem; font-weight:700; text-align:center; letter-spacing:0.15em; margin:0.6rem 0; color:var(--accent2); }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.6rem; }
-  .tag { display:inline-block; padding:0.2rem 0.6rem; background:var(--bg); border-radius:4px; font-size:0.85rem; margin:0.15rem; }
-  .loading { text-align:center; padding:2rem; color:var(--sub); display:none; }
-  .loading.show { display:block; }
-  .spinner { width:30px; height:30px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 0.8rem; }
+  .result.show { display:block; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px);} to{opacity:1;transform:translateY(0);} }
+  .result-block { margin-bottom:1rem; }
+  .result-block h3 { font-size:0.85rem; color:var(--sub); margin-bottom:0.35rem; padding-bottom:0.25rem; border-bottom:1px solid var(--border); text-transform:uppercase; letter-spacing:0.05em; font-weight:500; }
+  .bazi-big { font-family:"Noto Serif SC",serif; font-size:1.6rem; font-weight:700; text-align:center; letter-spacing:0.25em; margin:0.5rem 0; color:var(--accent2); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.5rem; }
+  .tag { display:inline-block; padding:0.15rem 0.5rem; background:var(--bg); border-radius:6px; font-size:0.8rem; margin:0.1rem; }
+  .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; }
+  .loading-symbol { width:44px; height:44px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin-bottom:20px; }
   @keyframes spin { to{transform:rotate(360deg);} }
-  .notice { background:#fff3cd; border-left:3px solid #ffc107; padding:0.6rem 1rem; border-radius:0 6px 6px 0; font-size:0.85rem; margin-bottom:1rem; color:#664d03; }
-  @media(prefers-color-scheme:dark){ .notice { background:#2a2010; color:#e0c060; } }
-  .error { background:#ffe0e0; border-left:3px solid var(--danger); padding:0.6rem 1rem; border-radius:0 6px 6px 0; color:var(--danger); font-size:0.85rem; margin-bottom:1rem; display:none; }
+  .loading-text { color:var(--text); font-size:1.1rem; font-weight:500; letter-spacing:0.1em; font-family:"Noto Serif SC",serif; }
+  .loading-sub { margin-top:6px; color:var(--sub); font-size:0.8rem; }
+  .ai-box { margin-top:0.8rem; padding:1rem; background:var(--bg); border-radius:8px; border-left:3px solid var(--accent); animation:fadeIn 0.5s ease; }
+  .ai-box h3 { font-size:0.9rem; color:var(--accent2); margin-bottom:0.5rem; display:flex; align-items:center; gap:0.3rem; }
+  .ai-box p { line-height:1.8; font-size:0.9rem; white-space:pre-wrap; }
+  .notice { background:var(--accent-light); border-left:3px solid var(--accent); padding:0.5rem 0.8rem; border-radius:0 6px 6px 0; font-size:0.78rem; margin-bottom:0.8rem; color:var(--accent2); }
+  .error { background:#fef2f2; border-left:3px solid var(--danger); padding:0.5rem 0.8rem; border-radius:0 6px 6px 0; color:var(--danger); font-size:0.8rem; margin-bottom:0.8rem; display:none; }
   @media(prefers-color-scheme:dark){ .error { background:#2a1010; } }
-  .small { font-size:0.8rem; color:var(--sub); }
+  .small { font-size:0.78rem; color:var(--sub); }
+  .yao-line { display:flex; align-items:center; gap:0.5rem; padding:0.2rem 0; font-family:"Noto Serif SC",serif; font-size:0.9rem; }
 </style>
 </head>
 <body>
 
+<div id="loading-screen" class="loading-overlay">
+  <div class="loading-symbol"></div>
+  <div class="loading-text">天机推演中</div>
+  <div class="loading-sub">Loading...</div>
+</div>
+
 <div class="header">
-  <div class="header-inner" style="justify-content:center;">
-    <div class="logo" style="font-size:1.5rem;letter-spacing:0.6em;">☰ 问  爻</div>
+  <div class="header-inner">
+    <div class="logo">☰ 问  爻</div>
   </div>
 </div>
 
 <div class="container">
   <div class="tabs">
-    <button class="tab active" data-tab="bazi">🎋 八字排盘</button>
-    <button class="tab" data-tab="meihua">🌸 梅花易数</button>
-    <button class="tab" data-tab="liuyao">🪙 六爻预测</button>
-    <button class="tab" data-tab="xingpan">⭐ 占星星盘</button>
+    <button class="tab active" data-tab="bazi">八字</button>
+    <button class="tab" data-tab="meihua">梅花</button>
+    <button class="tab" data-tab="liuyao">六爻</button>
+    <button class="tab" data-tab="xingpan">星盘</button>
   </div>
 
-  <div id="tab-desc" style="text-align:center;padding:0.8rem 1rem;color:var(--sub);font-size:0.9rem;line-height:1.6;max-width:600px;margin:0 auto;"></div>
-  <div class="notice">⚠️ 本工具仅供传统文化研究与参考，不构成任何决策建议。</div>
+  <div id="tab-desc" style="text-align:center;padding:0.6rem 0.5rem;color:var(--sub);font-size:0.82rem;line-height:1.6;"></div>
+  <div class="notice">本工具仅供传统文化研究参考，不构成任何决策建议。</div>
   <div class="error" id="error"></div>
-  <div class="loading" id="loading"><div class="spinner"></div>正在计算中...</div>
 
   <!-- 八字 -->
   <div class="card tab-content" id="tab-bazi">
