@@ -139,6 +139,7 @@ async function callAPI(path,body){
 }
 
 async function doBazi(){
+  alert('doBazi called');
   var d=await callAPI('/api/v1/bazi',{year:+de('bz_y').value,month:+de('bz_m').value,day:+de('bz_d').value,hour:+de('bz_h').value,minute:+de('bz_mi').value||0,gender:de('bz_g').value,birthplace:de('bz_p').value});
   if(!d)return;
   var p=d.pillars,dm=d.day_master,sa=d.strength_analysis,lk=d.luck;
