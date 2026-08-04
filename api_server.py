@@ -524,7 +524,7 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group"><label>出生地（可选）</label><input type="text" id="bz_place" placeholder="如：北京" style="width:180px;"></div>
     </div>
     <div style="display:flex;gap:0.5rem;justify-content:center;margin-top:0.3rem;">
-      <button class="btn" onclick="doBazi()">排盘</button>
+      <button class="btn" onclick="alert('click works');doBazi()">排盘</button>
       <button class="btn" onclick="doBaziAI()" style="background:var(--accent2);">推演</button>
     </div>
     <div class="result" id="bz-result"></div>
