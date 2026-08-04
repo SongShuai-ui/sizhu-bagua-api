@@ -456,7 +456,7 @@ APP_HTML = """<!DOCTYPE html>
   .bazi-big { font-family:"STSong","SimSun","宋体",serif; font-size:1.6rem; font-weight:700; text-align:center; letter-spacing:0.25em; margin:0.5rem 0; color:var(--accent2); }
   .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:0.5rem; }
   .tag { display:inline-block; padding:0.15rem 0.5rem; background:var(--bg); border-radius:6px; font-size:0.8rem; margin:0.1rem; }
-  .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; }
+  .loading-overlay { position:fixed; inset:0; background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; pointer-events:none; }
   .loading-symbol { width:44px; height:44px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 1s linear infinite; margin-bottom:20px; }
   @keyframes spin { to{transform:rotate(360deg);} }
   .loading-text { color:var(--text); font-size:1.1rem; font-weight:500; letter-spacing:0.1em; font-family:"STSong","SimSun","宋体",serif; }
@@ -479,15 +479,17 @@ APP_HTML = """<!DOCTYPE html>
   <div class="loading-sub">问爻 · 命理推演</div>
 </div>
 <script>
-(function hideLoader() {
+(function() {
   var el = document.getElementById('loading-screen');
-  if (el && document.readyState === 'complete') {
+  if (!el) return;
+  function hide() {
     el.style.transition = 'opacity 0.4s';
     el.style.opacity = '0';
     setTimeout(function() { el.remove(); }, 400);
-  } else {
-    setTimeout(hideLoader, 100);
   }
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(hide, 100); });
+  window.addEventListener('load', hide);
+  setTimeout(hide, 3000);
 })();
 </script>
 
