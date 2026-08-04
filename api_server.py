@@ -522,7 +522,7 @@ APP_HTML = """<!DOCTYPE html>
     <div class="form-row">
       <div class="form-group"><label>性别</label><select id="bz_gender"><option>男</option><option>女</option></select></div>
       <div class="form-group"><label>出生地（可选）</label><input type="text" id="bz_place" placeholder="如：北京" style="width:180px;"></div>
-      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doBazi()">排盘</button><button class="btn" onclick="doBaziAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doBazi()">排盘</button><button class="btn" onclick="doBaziAI()" style="background:var(--accent2);">推演</button></div>
     </div>
     <div class="result" id="bz-result"></div>
   </div>
@@ -535,7 +535,7 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group"><label>数字 2</label><input type="number" id="mh_b" value="" placeholder="2"></div>
       <div class="form-group"><label>数字 3</label><input type="number" id="mh_c" value="" placeholder="0"></div>
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="mh_q" placeholder="如：问事业" style="width:200px;"></div>
-      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doMeihua()">起卦</button><button class="btn" onclick="doMeihuaAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doMeihua()">起卦</button><button class="btn" onclick="doMeihuaAI()" style="background:var(--accent2);">推演</button></div>
     </div>
     <div class="result" id="mh-result"></div>
   </div>
@@ -554,7 +554,7 @@ APP_HTML = """<!DOCTYPE html>
     </div>
     <div class="form-row">
       <div class="form-group"><label>所问之事（可选）</label><input type="text" id="ly_q" placeholder="如：问财运" style="width:200px;"></div>
-      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doLiuyao()">起卦</button><button class="btn" onclick="doLiuyaoAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doLiuyao()">起卦</button><button class="btn" onclick="doLiuyaoAI()" style="background:var(--accent2);">推演</button></div>
     </div>
     <div class="result" id="ly-result"></div>
   </div>
@@ -569,7 +569,7 @@ APP_HTML = """<!DOCTYPE html>
       <div class="form-group"><label>时 (0-23)</label><input type="number" id="xp_hour" value="" placeholder="5" min="0" max="23"></div>
       <div class="form-group"><label>分</label><input type="number" id="xp_min" value="" placeholder="30" min="0" max="59"></div>
       <div class="form-group"><label>出生地（可选）</label><input type="text" id="xp_place" placeholder="如：北京" style="width:180px;"></div>
-      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doXingpan()">排盘</button><button class="btn" onclick="doXingpanAI()" style="background:var(--accent2);">🤖 AI 解读</button></div>
+      <div class="form-group" style="align-self:flex-end;display:flex;gap:0.5rem;"><button class="btn" onclick="doXingpan()">排盘</button><button class="btn" onclick="doXingpanAI()" style="background:var(--accent2);">推演</button></div>
     </div>
     <div class="result" id="xp-result"></div>
   </div>
