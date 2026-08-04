@@ -75,7 +75,7 @@ button.b2 { background:var(--card); color:var(--accent2); border:1.5px solid var
       <div class="fld"><label>性别</label><select id="bz_g"><option>男</option><option>女</option></select></div>
       <div class="fld"><label>出生地</label><input id="bz_p" placeholder="北京" size="8"></div>
     </div>
-    <div class="btns"><button onclick="doBazi()">排盘</button><button class="b2" onclick="doBaziAI()">推演</button></div>
+    <div class="btns"><button id="btn-bz">排盘</button><button id="btn-bz-ai" class="b2">推演</button></div>
     <div class="result" id="bz-r"></div>
   </div>
 
@@ -86,7 +86,7 @@ button.b2 { background:var(--card); color:var(--accent2); border:1.5px solid var
       <div class="fld"><label>数字3</label><input id="mh_c" value="0" size="5"></div>
       <div class="fld"><label>所问</label><input id="mh_q" placeholder="如：问事业" size="12"></div>
     </div>
-    <div class="btns"><button onclick="doMeihua()">起卦</button><button class="b2" onclick="doMeihuaAI()">推演</button></div>
+    <div class="btns"><button id="btn-mh">起卦</button><button id="btn-mh-ai" class="b2">推演</button></div>
     <div class="result" id="mh-r"></div>
   </div>
 
@@ -98,7 +98,7 @@ button.b2 { background:var(--card); color:var(--accent2); border:1.5px solid var
       <div class="fld"><label>5</label><input id="ly_n5" value="2" size="4"></div><div class="fld"><label>6</label><input id="ly_n6" value="9" size="4"></div>
       <div class="fld"><label>所问</label><input id="ly_q" placeholder="如：问财运" size="12"></div>
     </div>
-    <div class="btns"><button onclick="doLiuyao()">起卦</button><button class="b2" onclick="doLiuyaoAI()">推演</button></div>
+    <div class="btns"><button id="btn-ly">起卦</button><button id="btn-ly-ai" class="b2">推演</button></div>
     <div class="result" id="ly-r"></div>
   </div>
 
@@ -111,13 +111,22 @@ button.b2 { background:var(--card); color:var(--accent2); border:1.5px solid var
       <div class="fld"><label>分</label><input id="xp_mi" value="30" size="4"></div>
       <div class="fld"><label>出生地</label><input id="xp_p" placeholder="北京" size="8"></div>
     </div>
-    <div class="btns"><button onclick="doXingpan()">排盘</button><button class="b2" onclick="doXingpanAI()">推演</button></div>
+    <div class="btns"><button id="btn-xp">排盘</button><button id="btn-xp-ai" class="b2">推演</button></div>
     <div class="result" id="xp-r"></div>
   </div>
 </div>
 
 <script>
+// Remove loader
 setTimeout(function(){var l=document.getElementById('ld');if(l){l.style.opacity='0';l.style.transition='opacity .3s';setTimeout(function(){if(l.parentNode)l.remove();},400);}},400);
+// Bind all buttons via JS instead of onclick
+window.addEventListener('DOMContentLoaded', function(){
+  function bind(id, fn){var el=document.getElementById(id);if(el)el.addEventListener('click',fn);}
+  bind('btn-bz', doBazi); bind('btn-bz-ai', doBaziAI);
+  bind('btn-mh', doMeihua); bind('btn-mh-ai', doMeihuaAI);
+  bind('btn-ly', doLiuyao); bind('btn-ly-ai', doLiuyaoAI);
+  bind('btn-xp', doXingpan); bind('btn-xp-ai', doXingpanAI);
+});
 
 var tabs=document.querySelectorAll('#tabs .tab');
 var descMap={bazi:'八字由年月日时四柱组成。填入公历出生时间，自动排盘并分析十神、大运流年。',meihua:'梅花易数以三个数字起卦。系统推演本卦互卦变卦，以体用生克断吉凶。默念问题，随意取三数。',liuyao:'六爻以6个数字起卦。系统自动装卦，判断世应动爻。留空随机铜钱起卦，问题越具体越准。',xingpan:'占星星盘基于西方占星学。太阳星座代表性格，月亮反映情感，上升是第一印象。'};
@@ -139,7 +148,6 @@ async function callAPI(path,body){
 }
 
 async function doBazi(){
-  alert('doBazi called');
   var d=await callAPI('/api/v1/bazi',{year:+de('bz_y').value,month:+de('bz_m').value,day:+de('bz_d').value,hour:+de('bz_h').value,minute:+de('bz_mi').value||0,gender:de('bz_g').value,birthplace:de('bz_p').value});
   if(!d)return;
   var p=d.pillars,dm=d.day_master,sa=d.strength_analysis,lk=d.luck;
