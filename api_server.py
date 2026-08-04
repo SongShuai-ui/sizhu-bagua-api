@@ -252,6 +252,62 @@ def app_page():
     return HTMLResponse(content=APP_HTML)
 
 
+@app.get("/test", response_class=HTMLResponse, include_in_schema=False)
+def test_page():
+    return HTMLResponse(content="""<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Test</title>
+<style>
+body { font-family: sans-serif; padding: 2rem; max-width: 500px; margin: 0 auto; }
+input, select { padding: 0.5rem; margin: 0.3rem; border: 1px solid #ccc; border-radius: 4px; }
+button { padding: 0.6rem 1.5rem; background: #d97706; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+.result { margin-top: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 8px; white-space: pre-wrap; }
+.error { color: red; margin-top: 0.5rem; }
+</style></head>
+<body>
+<h1>八字排盘测试</h1>
+<p>年 <input id="y" value="1989" size="6"> 月 <input id="m" value="6" size="4"> 日 <input id="d" value="28" size="4">
+   时 <input id="h" value="5" size="4"> 分 <input id="mi" value="30" size="4">
+   性别 <select id="g"><option>男</option><option>女</option></select></p>
+<button onclick="test()">排盘</button>
+<div class="error" id="err"></div>
+<div class="result" id="res"></div>
+<script>
+async function test() {
+  document.getElementById('err').textContent = '';
+  document.getElementById('res').textContent = '请求中...';
+  try {
+    const body = {
+      year: +document.getElementById('y').value,
+      month: +document.getElementById('m').value,
+      day: +document.getElementById('d').value,
+      hour: +document.getElementById('h').value,
+      minute: +document.getElementById('mi').value || 0,
+      gender: document.getElementById('g').value
+    };
+    const r = await fetch('/api/v1/bazi', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body)
+    });
+    const d = await r.json();
+    if (d.code !== 0) throw new Error(d.error || JSON.stringify(d.detail));
+    const p = d.data.pillars;
+    document.getElementById('res').textContent = '八字: ' +
+      p.year.gan + p.year.zhi + ' ' + p.month.gan + p.month.zhi + ' ' +
+      p.day.gan + p.day.zhi + ' ' + p.hour.gan + p.hour.zhi + '\\n' +
+      '日主: ' + d.data.day_master.gan + d.data.day_master.element + '\\n' +
+      '身强身弱: ' + d.data.strength_analysis.verdict;
+  } catch(e) {
+    document.getElementById('err').textContent = 'Error: ' + e.message;
+    document.getElementById('res').textContent = '';
+  }
+}
+</script>
+</body></html>""")
+
+
 # ── 根路径 → 中文文档页 ──
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 def index():
