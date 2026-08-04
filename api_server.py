@@ -249,9 +249,7 @@ def xingpan_ai(request: XingpanRequest):
 # ── 用户端应用 ──
 @app.get("/app", response_class=HTMLResponse, include_in_schema=False)
 def app_page():
-    import pathlib
-    html_path = pathlib.Path(__file__).parent / "app_page.html"
-    return HTMLResponse(content=html_path.read_text(encoding="utf-8"))
+    return test_page()
 
 
 @app.get("/test", response_class=HTMLResponse, include_in_schema=False)
