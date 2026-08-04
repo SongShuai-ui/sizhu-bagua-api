@@ -45,11 +45,6 @@ button.b2 { background:var(--card); color:var(--accent2); border:1.5px solid var
 </head>
 <body>
 
-<div id="ld" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
-  <div style="width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:16px;"></div>
-  <div style="color:var(--text);font-size:1.1rem;font-family:STKaiti,KaiTi,serif;">天机推演中</div>
-</div>
-<style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 
 <div class="header"><div class="logo">&#9775; 问&nbsp;&nbsp;爻</div></div>
 
@@ -117,16 +112,14 @@ button.b2 { background:var(--card); color:var(--accent2); border:1.5px solid var
 </div>
 
 <script>
-// Remove loader
-setTimeout(function(){var l=document.getElementById('ld');if(l){l.style.opacity='0';l.style.transition='opacity .3s';setTimeout(function(){if(l.parentNode)l.remove();},400);}},400);
-// Bind all buttons via JS instead of onclick
-window.addEventListener('DOMContentLoaded', function(){
+// Bind all buttons via JS
+(function(){
   function bind(id, fn){var el=document.getElementById(id);if(el)el.addEventListener('click',fn);}
   bind('btn-bz', doBazi); bind('btn-bz-ai', doBaziAI);
   bind('btn-mh', doMeihua); bind('btn-mh-ai', doMeihuaAI);
   bind('btn-ly', doLiuyao); bind('btn-ly-ai', doLiuyaoAI);
   bind('btn-xp', doXingpan); bind('btn-xp-ai', doXingpanAI);
-});
+})();
 
 var tabs=document.querySelectorAll('#tabs .tab');
 var descMap={bazi:'八字由年月日时四柱组成。填入公历出生时间，自动排盘并分析十神、大运流年。',meihua:'梅花易数以三个数字起卦。系统推演本卦互卦变卦，以体用生克断吉凶。默念问题，随意取三数。',liuyao:'六爻以6个数字起卦。系统自动装卦，判断世应动爻。留空随机铜钱起卦，问题越具体越准。',xingpan:'占星星盘基于西方占星学。太阳星座代表性格，月亮反映情感，上升是第一印象。'};
