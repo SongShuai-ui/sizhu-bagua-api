@@ -606,17 +606,22 @@ function switchTab(name) {
 tabs.forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
 switchTab('bazi');
 
-function showErr(msg) { const e = document.getElementById('error'); e.textContent = msg; e.style.display = msg ? 'block' : 'none'; }
+function showErr(msg) { console.error('App error:', msg); const e = document.getElementById('error'); e.textContent = msg; e.style.display = msg ? 'block' : 'none'; }
 function loading(s) { document.getElementById('loading').classList.toggle('show', s); }
 
 async function callAPI(path, body) {
   showErr(''); loading(true);
   try {
+    console.log('callAPI:', path, body);
     const r = await fetch(API + path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
-    const d = await r.json();
-    if (d.code !== 0) throw new Error(d.error || d.detail?.[0]?.msg || '请求失败');
+    console.log('Response status:', r.status);
+    const text = await r.text();
+    console.log('Response body:', text.substring(0, 500));
+    let d;
+    try { d = JSON.parse(text); } catch(e) { throw new Error('Invalid JSON: ' + text.substring(0, 200)); }
+    if (d.code !== 0) throw new Error(d.error || (d.detail && d.detail[0] && d.detail[0].msg) || '请求失败');
     return d.data;
-  } catch(e) { showErr(e.message); return null; }
+  } catch(e) { console.error('API error:', e.message); showErr(e.message); return null; }
   finally { loading(false); }
 }
 
